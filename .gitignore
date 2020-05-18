@@ -1,3 +1,7 @@
+### exclude content ###
+pages/*
+raw/*
+qrcodes/*
 
 # Created by https://www.gitignore.io/api/venv,macos,flask,python
 # Edit at https://www.gitignore.io/?templates=venv,macos,flask,python
