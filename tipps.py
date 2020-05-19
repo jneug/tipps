@@ -23,6 +23,7 @@ config = {
 }
 
 alphabet = string.ascii_lowercase + string.digits
+allowed_assets = ['css','js','jpg','jpeg','png','gif','svg']
 
 def generate_id():
 	return '-'.join([''.join(choices(alphabet, k=4)) for i in range(3)])
@@ -48,6 +49,14 @@ def list_tipps():
 	for page in pagelist:
 		pages.append(str(page))
 	return ({'pages': pages}, 200)
+
+@app.route('/asset/<path:asset>')
+def serve_asset( asset ):
+	asset_path = Path(config['basepath']) / 'templates' / path
+	if asset_path.is_file() and asset_path.suffix in allowed_assets:
+		return send_from_directory(str(asset_path.parent()), asset_path.name, as_attachment=False)
+	else:
+		abort(404)
 
 @app.route('/<string:id>')
 def show_tipp(id):
@@ -82,6 +91,7 @@ def compile_by_id(id):
 			'baseurl':	config['baseurl'],
 			'url':			f'{config["baseurl"]}/{id}',
 			'qrurl':		f'{config["baseurl"]}/qr/{id}',
+			'asseturl':	f'{config["baseurl"]}/asset/{template}',
 			'id': 			id,
 			'content': 	Markup(html_content)
 		}
@@ -141,5 +151,5 @@ def compile(text, id=None, template='default'):
 
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(host='0.0.0.0',debug=True)
     #app.run(host='0.0.0.0',port=9018)
