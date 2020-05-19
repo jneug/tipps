@@ -1,25 +1,13 @@
 # -*- coding: utf-8 -*-
 import string
-#import markdown2
-import markdown
 import qrcode
-import jinja2
 from pathlib import Path
 from random import choices
-import sqlite3
-
-config = {
-	'baseurl': 'https://tipp.ngb.schule',
-	'basepath': '.'#/var/www/virtual/ngb/tipp.ngb.schule'
-}
 
 alphabet = string.ascii_lowercase + string.digits
 
 def generate_id():
 	return '-'.join([''.join(choices(alphabet, k=4)) for i in range(3)])
-
-def get_template_name(name):
-	return f'{name}.html'
 
 def generate_from_text(body, id=None, template='default'):
 	jinja = jinja2.Environment(
@@ -27,24 +15,24 @@ def generate_from_text(body, id=None, template='default'):
 	)
 
 	id = id if id else generate_id()
-	
+
 	# save raw md data
 	with open(f'{config["basepath"]}/raw/{id}.md', 'w') as rawfile:
 		rawfile.write(body)
-	
+
 	# generate url and qrcode
 	url = f'{config["baseurl"]}/{id}'
 	qrurl = f'{config["baseurl"]}/qr/{id}'
 	code = qrcode.make(url)
 	code.save(f'{config["basepath"]}/qrcodes/{id}.png')
-	
+
 	# get template
 	tpl = jinja.get_template(get_template_name(template))
-	
+
 	# generate html and build template
 	#html_body = markdown2.markdown(body, extras=['header-ids', 'nofollow', 'tables'])
 	html_body = markdown.markdown(body, extensions=['tables'])
-	
+
 	tpl_vars = {
 		'baseurl': config['baseurl'],
 		'url': url,
@@ -52,7 +40,7 @@ def generate_from_text(body, id=None, template='default'):
 		'id': id,
 		'content': html_body
 	}
-	
+
 	html = tpl.render(**tpl_vars)
 	with open(f'{config["basepath"]}/pages/{id}.html', 'w') as htmlfile:
 		htmlfile.write(html)
