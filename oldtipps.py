@@ -119,7 +119,7 @@ def compile_from_text():
 
 	raw_content = request.data.decode().strip()
 	if len(raw_content) == 0:
-		abort(403)
+		abort(400)
 	html_content = markdown.markdown(raw_content, extensions=config['markdown']['extensions'])
 
 	tpl_vars = {

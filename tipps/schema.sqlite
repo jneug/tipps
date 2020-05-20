@@ -15,6 +15,6 @@ CREATE TABLE tipp (
   user_id INTEGER NOT NULL,
   created TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   compiled TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  template TEXT DEFAULT "default"
+  template TEXT DEFAULT "default",
   FOREIGN KEY (user_id) REFERENCES user (id)
 );
