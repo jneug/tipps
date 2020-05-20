@@ -28,12 +28,18 @@ def get_template_name(name):
 		return 'default.html'
 
 def get_tipp_url(id):
-	return url_for('web.show_tipp', id=id)
-	return f'{current_app.config["BASEURL"]}/{id}'
+	if "BASE_URL" in current_app.config:
+		return f'{current_app.config["BASE_URL"]}/{id}'
+	else:
+		return url_for('web.show_tipp', id=id, _external=True)
+	#return f'{current_app.config["BASEURL"]}/{id}'
 
 def get_qr_url(id):
-	return url_for('web.show_qr', id=id)
-	return f'{current_app.config["BASEURL"]}/qr/{id}'
+	if "BASE_URL" in current_app.config:
+		return f'{current_app.config["BASE_URL"]}/{id}'
+	else:
+		return url_for('web.show_qr', id=id, _external=True)
+	#return f'{current_app.config["BASEURL"]}/qr/{id}'
 
 def create_tipp(body, id=None, template='default'):
 	id = id if id else generate_id()
@@ -41,7 +47,7 @@ def create_tipp(body, id=None, template='default'):
 	raw_path = Path(current_app.config['RAWPATH']) / f'{id}.md'
 	raw_path.write_text(body)
 
-	qr_img = qrcode.make(f'{current_app.config["BASEURL"]}/{id}')
+	qr_img = qrcode.make(get_tipp_url(id))
 	qr_path = Path(current_app.config['QRPATH']) / f'{id}.png'
 	qr_img.save(qr_path)
 
@@ -60,7 +66,7 @@ def compile_tipp(id, template='default', body=None):
 	if body:
 		html_content = markdown.markdown(body, extensions=current_app.config['MARKDOWN']['extensions'])
 		tpl_vars = {
-			'baseurl':	current_app.config['BASEURL'],
+			'baseurl':	current_app.config['SERVER_NAME'],
 			'url':			get_tipp_url(id),
 			'qrurl':		get_qr_url(id),
 			'id': 			id,
