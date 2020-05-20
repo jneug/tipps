@@ -36,7 +36,7 @@ def get_tipp_url(id):
 
 def get_qr_url(id):
 	if "BASE_URL" in current_app.config:
-		return f'{current_app.config["BASE_URL"]}/{id}'
+		return f'{current_app.config["BASE_URL"]}/qr/{id}'
 	else:
 		return url_for('web.show_qr', id=id, _external=True)
 	#return f'{current_app.config["BASEURL"]}/qr/{id}'
