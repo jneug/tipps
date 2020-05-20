@@ -9,12 +9,12 @@ def create_app(test_config=None):
 	app = Flask(__name__, instance_relative_config=True)
 	app.config.from_mapping(
 		SECRET_KEY='dev',
-		SERVER_NAME='0.0.0.0:5000',
+		#SERVER_NAME='0.0.0.0:5000',
 		DATABASE=os.path.join(app.instance_path, 'tipps.db'),
 		PAGEPATH=os.path.join(app.instance_path,'/pages'),
 		QRPATH=os.path.join(app.instance_path,'/qrcodes'),
 		RAWPATH=os.path.join(app.instance_path,'/raw'),
-		BASEURL=None,
+		#BASEURL=None,
 		MARKDOWN={'extensions': ['tables'] }
 	)
 
