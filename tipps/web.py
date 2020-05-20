@@ -7,6 +7,10 @@ from tipps.util import *
 
 web = Blueprint('web', __name__)
 
+@web.route('/')
+def start():
+	return 'Tipps'
+
 @web.route('/<string:id>')
 def show_tipp(id):
 	page_path = Path(current_app.config['PAGEPATH']) / f'{id}.html'
