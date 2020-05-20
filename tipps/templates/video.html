@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width">
+  <title>Tipp {{ id }}</title>
+
+  <link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v3.0.1/dist/mini-default.min.css">
+  <style>
+  body { background-color: #ddd; }
+  header, footer { background-color: #ddd; border-color: #aaa;  }
+  header { border-bottom: 1px solid; }
+  footer { border-top: 1px solid; }
+  #content { padding: 2rem; background-color: #fff; }
+  #tippurl { width: 100%; }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+<header>
+<span id="header--title" class="logo">Tipp  <a href="{{ url }}">{{ id }}</a></span>
+</header>
+
+<div id="content">
+	<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/{{ content }}" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+</div>
+
+<footer class="container">
+<div class="row">
+<div id="footer--qr" class="col-sm-4">
+  <img src="{{ qrurl }}" alt="QR-Code zu  Tipp {{ id }}" class="bordered shadowed responsive-margin" />
+</div>
+<div id="footer--url" class="col-sm-8">
+  <input type="text" id="tippurl" value="{{ url }}" disabled />
+</div>
+</div>
+</footer>
+</body>
+</html>
