@@ -131,3 +131,12 @@ def token_create():
 			db.execute('INSERT INTO user (name,token,ip,created_by) VALUES (?, ?, ?, ?)', (name, token, '0.0.0.0', user_id,))
 			db.commit()
 			return {'token': token}
+
+@v1.route('/token/delete/<string:id>')
+def tipp_delete(id):
+	if not authenticate():
+		return ({'code': 401, 'msg': 'Authentication failed!'}, 401)
+	db = get_db()
+	db.execute('DELETE FROM tipp WHERE id = ?', (id,))
+	db.commit()
+	return ({}, 200)

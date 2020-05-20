@@ -14,6 +14,7 @@ def register_commands(app):
 	app.cli.add_command(recompile_command)
 	app.cli.add_command(maintenance_command)
 	app.cli.add_command(cleanup_command)
+	app.cli.add_command(delete_command)
 
 @click.command('init-db')
 @with_appcontext
@@ -51,6 +52,15 @@ def maintenance_command():
 			click.echo(f'Compiled tipp {raw.stem}.')
 	db.commit()
 	click.echo('Done!')
+
+@click.command('delete')
+@click.argument('id')
+@with_appcontext
+def delete_command(id):
+	db = get_db()
+	db.execute('DELETE FROM tipp WHERE id = ?', (id,))
+	db.commit()
+	click.echo(f'Tipp {id} deleted.')
 
 @click.command('cleanup')
 @with_appcontext
