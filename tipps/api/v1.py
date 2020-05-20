@@ -1,23 +1,21 @@
-from flask import Blueprint, request, current_app, abort, g
+from flask import Blueprint, request, current_app, g
 
 from pathlib import Path
 
 from tipps.db import get_db
 from tipps.util import *
 
-def authenticate(view):
-	def authenticate_bearer_token(*args, **kwargs):
-		if 'Authorization' in request.headers and request.headers['Authorization'].startswith('Bearer'):
-			token = request.headers['Authorization'][7:].strip()
+def authenticate():
+	if 'Authorization' in request.headers and request.headers['Authorization'].startswith('Bearer'):
+		token = request.headers['Authorization'][7:].strip()
 
-			db = get_db()
-			user_id = db.execute('SELECT id FROM user WHERE token = ?', (token,)).fetchone()
-			if user_id:
-				g.auth = {'user_id': user_id['id'], 'token': token}
-				return view(*args, **kwargs)
-		abort(401)
+		db = get_db()
+		user_id = db.execute('SELECT id FROM user WHERE token = ?', (token,)).fetchone()
+		if user_id:
+			g.auth = {'user_id': user_id['id'], 'token': token}
+			return True
+	return False
 
-	return authenticate_bearer_token
 
 v1 = Blueprint('api/v1', __name__, url_prefix='/api/v1')
 
@@ -87,19 +85,22 @@ def tipp_compile(id):
 			'qrurl': get_qr_url(id),
 		}
 	else:
-		abort(404)
+		return ({'code': 400, 'msg': 'Unknown id!'}, 400)
 
-@authenticate
 @v1.route('/tipp/create', methods=['POST'])
 def tipp_create():
+	if not authenticate():
+		return ({'code': 401, 'msg': 'Authentication failed!'}, 401)
+
 	template = request.args['template'] if 'template' in request.args else 'default'
 
 	body = request.data.decode().strip()
 	if len(body) == 0:
-		abort(400)
+		return ({'code': 400, 'msg': 'Body must not be empty!'}, 400)
 
 	id = create_tipp(body, template=template)
 
+	db = get_db()
 	db.execute('INSERT INTO tipp (id,user_id,template) VALUES (?, ?, ?)', (id, g.auth['user_id'], template))
 	db.commit()
 
@@ -109,17 +110,24 @@ def tipp_create():
 		'qrurl': get_qr_url(id),
 	}
 
-@authenticate
 @v1.route('/token/create', methods=['POST'])
 def token_create():
-	name = request.data.decode().strip()
-	if len(name) == 0:
-		abort(400)
+	if not authenticate():
+		return ({'code': 401, 'msg': 'Authentication failed!'}, 401)
+
+	data = request.json
+	if 'name' not in data or len(data['name']) == 0:
+		return ({'code': 400, 'msg': 'Provide a name for the new token: {"name": "..."}'}, 400)
 	else:
 		token = generate_token()
 		user_id = g.auth['user_id']
+		name = data['name']
 
 		db = get_db()
-		db.execute('INSERT INTO user (name,token,ip,created_by) VALUES (?, ?, ?, ?)', (name, token, '0.0.0.0', user_id,))
-		db.commit()
-		return {'token': token}
+		result = db.execute('SELECT id FROM user WHERE name = ?', (name,)).fetchone()
+		if result:
+			return ({'code': 400, 'msg': 'Tokenname already in use!'}, 400)
+		else:
+			db.execute('INSERT INTO user (name,token,ip,created_by) VALUES (?, ?, ?, ?)', (name, token, '0.0.0.0', user_id,))
+			db.commit()
+			return {'token': token}
