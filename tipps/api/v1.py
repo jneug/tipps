@@ -103,19 +103,18 @@ def tipp_details(id):
 
 @v1.route('/tipps/<string:id>', methods=['PATCH'])
 def tipp_compile(id):
-	template = request.args.get('template', default=None, type=str)
-
 	db = get_db()
 	result = db.execute('SELECT template FROM tipp WHERE id = ?', (id,)).fetchone()
 	if result:
-		if not template:
-			template = result['template']
+		# TODO: allow form-date / plaintext here?
+		template = str(request.json.get('template', result['template']))
 		timestamp = compile_tipp(id, template=template)
-		db.execute('UPDATE tipp SET compiled = ? WHERE id = ?', (timestamp, id,))
+		db.execute('UPDATE tipp SET compiled = ?, template = ? WHERE id = ?', (timestamp, template, id,))
 		db.commit()
 		return {
 			'id': id,
-			'compiled': timestamp
+			'compiled': timestamp,
+			'template': template
 		}
 	else:
 		return ({'code': 400, 'msg': 'unknown id'}, 400)
