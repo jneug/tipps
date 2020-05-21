@@ -62,9 +62,11 @@ def delete_command(id):
 	db.commit()
 
 	raw_path = Path(current_app.config['RAWPATH']) / f'{id}.md'
-	raw_path.unlink(missing_ok=True)
+	if raw_path.is_file():
+		raw_path.unlink()
 	page_path = Path(current_app.config['PAGEPATH']) / f'{id}.html'
-	page_path.unlink(missing_ok=True)
+	if page_path.is_file():
+		page_path.unlink()
 	click.echo(f'Tipp {id} deleted.')
 
 @click.command('cleanup')
