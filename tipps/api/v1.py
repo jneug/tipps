@@ -45,11 +45,22 @@ def list_tipps(token=None):
 	limit = request.args.get('limit', default=20, type=int)
 	offset = request.args.get('offset', default=0, type=int)
 
-	db = get_db()
-	if token is None:
-		result = db.execute(f'SELECT id,created,template FROM tipp ORDER BY {sort} LIMIT {limit} OFFSET {offset}').fetchall()
+	# filters
+	filters = {}
+
+	template = request.args.get('template', default=None)
+	if template:
+		filters['tipp.template'] = template
+	if token:
+		filters['user.token'] = token
+
+	if len(filters) > 0:
+		where = 'WHERE ' + ', '.join([f'{k} = ?' for k in filters.keys()])
 	else:
-		result = db.execute(f'SELECT tipp.id,tipp.created,tipp.template FROM tipp INNER JOIN user ON user.id = tipp.user_id WHERE user.token = ? ORDER BY {sort} LIMIT {limit} OFFSET {offset}', (token,)).fetchall()
+		where = ''
+
+	db = get_db()
+	result = db.execute(f'SELECT tipp.id,tipp.created,tipp.template FROM tipp INNER JOIN user ON user.id = tipp.user_id {where} ORDER BY {sort} LIMIT {limit} OFFSET {offset}', tuple(filters.values())).fetchall()
 
 	tipps = []
 	if not details:
