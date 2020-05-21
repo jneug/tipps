@@ -144,6 +144,7 @@ def tipp_create():
 			content = request.form.get('content', default='').strip()
 	else:
 		return ({'code': 415, 'msg': 'unsupported content type'}, 415, {'Accept': 'application/json,application/x-www-form-urlencoded'})
+	
 	if len(content) == 0:
 		return ({'code': 400, 'msg': 'content may not be empty'}, 400)
 
@@ -167,20 +168,32 @@ def tipp_create():
 def token_create():
 	if not authenticate():
 		return ({'code': 401, 'msg': 'authentication failed'}, 401)
+	
+	content_type = request.headers.get('Content-Type', default=None)
+	if not content_type:
+		return ({'code': 400, 'msg': 'missing content type'}, 400, {'Accept': 'application/json,application/x-www-form-urlencoded'})
 
-	data = request.json
-	if 'name' not in data or len(data['name']) == 0:
+	if content_type == 'application/json':
+		if 'name' in request.json:
+			name = request.json['name']
+		else
+			name = ''
+	elif content_type == 'application/x-www-form-urlencoded':
+		name = request.form.get('name', default='', type=str)
+	else:
+		return ({'code': 415, 'msg': 'unsupported content type'}, 415, {'Accept': 'application/json,application/x-www-form-urlencoded'})
+	
+	if len(name) == 0:
 		return ({'code': 400, 'msg': 'missing token name'}, 400)
 	else:
 		token = generate_token()
 		user_id = g.auth['user_id']
-		name = data['name']
 
 		db = get_db()
 		result = db.execute('SELECT id FROM user WHERE name = ?', (name,)).fetchone()
 		if result:
 			return ({'code': 409, 'msg': 'token name already in use'}, 409)
 		else:
-			db.execute('INSERT INTO user (name,token,ip,created_by) VALUES (?, ?, ?, ?)', (name, token, '0.0.0.0', user_id,))
+			db.execute('INSERT INTO user (name,token,ip,created_by) VALUES (?, ?, ?, ?)', (name, token, get_client_ip(), user_id,))
 			db.commit()
 			return {'token': token}

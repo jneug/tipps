@@ -16,6 +16,9 @@ def generate_token():
 	alphabet = string.ascii_letters
 	return ''.join(choices(alphabet, k=32))
 
+def get_client_ip():
+	return '0.0.0.0'
+
 def get_template_name(name):
 	tpl_path = Path(current_app.root_path) / 'templates' / name
 	if tpl_path.is_dir():
