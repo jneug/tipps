@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block additional_styles %}
+<link href="https://cdn.jsdelivr.net/npm/prismjs@1.20.0/themes/prism.css" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<div class="content-text">
+{{ content }}
+</div>
+{% endblock %}
+
+{% block additional_scripts_foot %}
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.20.0/components/prism-core.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/prismjs@1.20.0/plugins/autoloader/prism-autoloader.min.js"></script>
+{% endblock %}
