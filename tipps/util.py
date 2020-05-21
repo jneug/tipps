@@ -5,6 +5,8 @@ from random import choices
 import markdown
 import qrcode
 from pathlib import Path
+from datetime import datetime
+import os
 
 def generate_id():
 	alphabet = string.ascii_lowercase + string.digits
@@ -76,3 +78,5 @@ def compile_tipp(id, template='default', body=None):
 
 		page_path = Path(current_app.config['PAGEPATH']) / f'{id}.html'
 		page_path.write_text(content)
+
+		return datetime.fromtimestamp(os.path.getmtime(str(page_path)))
