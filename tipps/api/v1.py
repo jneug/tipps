@@ -122,22 +122,30 @@ def tipp_delete(id):
 def tipp_create():
 	if not authenticate():
 		return ({'code': 401, 'msg': 'authentication failed'}, 401)
+		
+	content_type = request.headers.get('Content-Type', default=None)
+	if not content_type:
+		return ({'code': 400, 'msg': 'missing content type'}, 400, {'Accept': 'application/json,application/x-www-form-urlencoded'})
+	
+	if content_type == 'application/json':
+		if 'content' in request.json:
+			content = str(request.json['content'])
+		else:
+			content = ''
 
-	#template = request.args.get('template', default='default', type=str)
+		template = 'default'
+		if 'template' in request.json:
+			template = str(request.json['template'])
+	elif content_type == 'application/x-www-form-urlencoded':
+		template = request.args.get('template', default='default', type=str)
 
-	#content = request.data.decode().strip()
-	#if len(content) == 0:
-	#	content = request.form.get('content', default='').strip()
-	#if len(content) == 0:
-	#	return ({'code': 400, 'msg': 'body may not be empty'}, 400)
-
-	if 'content' not in request.json:
+		content = request.data.decode().strip()
+		if len(content) == 0:
+			content = request.form.get('content', default='').strip()
+	else:
+		return ({'code': 415, 'msg': 'unsupported content type'}, 415, {'Accept': 'application/json,application/x-www-form-urlencoded'})
+	if len(content) == 0:
 		return ({'code': 400, 'msg': 'content may not be empty'}, 400)
-	content = str(request.json['content'])
-
-	template = 'default'
-	if 'template' in request.json:
-		template = str(request.json['template'])
 
 	id = create_tipp(content, template=template)
 
