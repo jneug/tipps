@@ -60,6 +60,11 @@ def delete_command(id):
 	db = get_db()
 	db.execute('DELETE FROM tipp WHERE id = ?', (id,))
 	db.commit()
+
+	raw_path = Path(current_app.config['RAWPATH']) / f'{id}.md'
+	raw_path.unlink(missing_ok=True)
+	page_path = Path(current_app.config['PAGEPATH']) / f'{id}.html'
+	page_path.unlink(missing_ok=True)
 	click.echo(f'Tipp {id} deleted.')
 
 @click.command('cleanup')
