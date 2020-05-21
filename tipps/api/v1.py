@@ -1,20 +1,25 @@
 from flask import Blueprint, request, current_app, g
 
 from pathlib import Path
+from functools import wraps
 
 from tipps.db import get_db
 from tipps.util import *
 
-def authenticate():
-	if 'Authorization' in request.headers and request.headers['Authorization'].startswith('Bearer'):
-		token = request.headers['Authorization'][7:].strip()
 
-		db = get_db()
-		user_id = db.execute('SELECT id FROM user WHERE token = ?', (token,)).fetchone()
-		if user_id:
-			g.auth = {'user_id': user_id['id'], 'token': token}
-			return True
-	return False
+def restricted(func):
+	@wraps(func)
+	def authenticate(*args, **kwargs):
+		if 'Authorization' in request.headers and request.headers['Authorization'].startswith('Bearer'):
+			token = request.headers['Authorization'][7:].strip()
+
+			db = get_db()
+			user_id = db.execute('SELECT id FROM user WHERE token = ?', (token,)).fetchone()
+			if user_id:
+				request.authorization = {'type': 'bearer', 'user_id': user_id['id'], 'token': token}
+				return func(*args, **kwargs)
+		return ({'code': 401, 'msg': 'authentication failed'}, 401)
+	return authenticate
 
 
 v1 = Blueprint('api/v1', __name__, url_prefix='/api/v1')
@@ -105,53 +110,48 @@ def tipp_compile(id):
 		return ({'code': 400, 'msg': 'unknown id'}, 400)
 
 @v1.route('/tipps/<string:id>', methods=['DELETE'])
+@restricted
 def tipp_delete(id):
-	if not authenticate():
-		return ({'code': 401, 'msg': 'authentication failed'}, 401)
 	db = get_db()
 	result = db.execute('SELECT user_id FROM tipp WHERE id = ?', (id,)).fetchone()
 	if not result:
 		return({'code': 404, 'msg': f'unknown id'}, 404)
-	if result['user_id'] != g.auth['user_id']:
+	if result['user_id'] != request.authorization['user_id']:
 		return({'code': 403, 'msg': f'tipp owned by other token'}, 403)
-	db.execute('DELETE FROM tipp WHERE id = ? AND user_id = ?', (id, g.auth['user_id'],))
+	db.execute('DELETE FROM tipp WHERE id = ? AND user_id = ?', (id, request.authorization['user_id'],))
 	db.commit()
 	return ('', 204)
 
 @v1.route('/tipps', methods=['POST'])
+@restricted
 def tipp_create():
-	if not authenticate():
-		return ({'code': 401, 'msg': 'authentication failed'}, 401)
-		
-	content_type = request.headers.get('Content-Type', default=None)
-	if not content_type:
-		return ({'code': 400, 'msg': 'missing content type'}, 400, {'Accept': 'application/json,application/x-www-form-urlencoded'})
-	
-	if content_type == 'application/json':
-		if 'content' in request.json:
-			content = str(request.json['content'])
-		else:
-			content = ''
+	if request.mimetype == '':
+		return ({'code': 400, 'msg': 'missing content type'}, 400, {'Accept': 'application/json,application/x-www-form-urlencoded,text/plain'})
 
-		template = 'default'
-		if 'template' in request.json:
-			template = str(request.json['template'])
-	elif content_type == 'application/x-www-form-urlencoded':
+	if request.is_json:
+		content = str(request.json.get('content', ''))
+		template = str(request.json.get('template', 'default'))
+	elif request.mimetype == 'application/x-www-form-urlencoded':
+		content = request.form.get('content', default='', type=str)
 		template = request.args.get('template', default='default', type=str)
-
+	elif request.mimetype == 'text/plain':
 		content = request.data.decode().strip()
-		if len(content) == 0:
-			content = request.form.get('content', default='').strip()
+		template = 'default'
 	else:
-		return ({'code': 415, 'msg': 'unsupported content type'}, 415, {'Accept': 'application/json,application/x-www-form-urlencoded'})
-	
-	if len(content) == 0:
+		return ({'code': 415, 'msg': 'unsupported content type'}, 415, {'Accept': 'application/json,application/x-www-form-urlencoded,text/plain'})
+
+	charset = request.mimetype_params.get('charset', 'utf-8')
+	if charset != 'utf-8':
+		content = content.encode(charset).decode()
+		template = template.encode(charset).decode()
+
+	if len(content.strip()) == 0:
 		return ({'code': 400, 'msg': 'content may not be empty'}, 400)
 
 	id = create_tipp(content, template=template)
 
 	db = get_db()
-	db.execute('INSERT INTO tipp (id,user_id,template) VALUES (?, ?, ?)', (id, g.auth['user_id'], template,))
+	db.execute('INSERT INTO tipp (id,user_id,template) VALUES (?, ?, ?)', (id, request.authorization['user_id'], template,))
 	db.commit()
 
 	return ({
@@ -165,35 +165,66 @@ def tipp_create():
 	}, 201)
 
 @v1.route('/tokens', methods=['POST'])
+@restricted
 def token_create():
-	if not authenticate():
-		return ({'code': 401, 'msg': 'authentication failed'}, 401)
-	
-	content_type = request.headers.get('Content-Type', default=None)
-	if not content_type:
-		return ({'code': 400, 'msg': 'missing content type'}, 400, {'Accept': 'application/json,application/x-www-form-urlencoded'})
+	if request.mimetype == '':
+		return ({'code': 400, 'msg': 'missing content type'}, 400, {'Accept': 'application/json,application/x-www-form-urlencoded,text/plain'})
 
-	if content_type == 'application/json':
-		if 'name' in request.json:
-			name = request.json['name']
-		else
-			name = ''
-	elif content_type == 'application/x-www-form-urlencoded':
+	if request.is_json:
+		name = str(request.json.get('name', ''))
+	elif request.mimetype == 'application/x-www-form-urlencoded':
 		name = request.form.get('name', default='', type=str)
+	elif request.mimetype == 'text/plain':
+		name = request.data.decode().strip()
 	else:
-		return ({'code': 415, 'msg': 'unsupported content type'}, 415, {'Accept': 'application/json,application/x-www-form-urlencoded'})
-	
+		return ({'code': 415, 'msg': 'unsupported content type'}, 415, {'Accept': 'application/json,application/x-www-form-urlencoded,text/plain'})
+
+	charset = request.mimetype_params.get('charset', 'utf-8')
+	if charset != 'utf-8':
+		name = name.encode(charset).decode()
+
 	if len(name) == 0:
 		return ({'code': 400, 'msg': 'missing token name'}, 400)
 	else:
 		token = generate_token()
-		user_id = g.auth['user_id']
+		user_id = request.authorization['user_id']
+		user_ip = request.remote_addr
 
 		db = get_db()
 		result = db.execute('SELECT id FROM user WHERE name = ?', (name,)).fetchone()
 		if result:
 			return ({'code': 409, 'msg': 'token name already in use'}, 409)
 		else:
-			db.execute('INSERT INTO user (name,token,ip,created_by) VALUES (?, ?, ?, ?)', (name, token, get_client_ip(), user_id,))
+			db.execute('INSERT INTO user (name,token,ip,created_by) VALUES (?, ?, ?, ?)', (name, token, user_ip, user_id,))
 			db.commit()
 			return {'token': token}
+
+@v1.route('/echo', methods=['GET', 'POST', 'DELETE', 'PATCH', 'PUT'])
+@restricted
+def echo_route():
+	if request.mimetype == '':
+		return ({'code': 400, 'msg': 'missing content type'}, 400, {'Accept': 'application/json,application/x-www-form-urlencoded,text/plain'})
+
+	if request.is_json:
+		name = str(request.json.get('name', ''))
+	elif request.mimetype == 'application/x-www-form-urlencoded':
+		name = request.form.get('name', default='', type=str)
+	elif request.mimetype == 'text/plain':
+		name = request.data.decode().strip()
+	else:
+		return ({'code': 415, 'msg': 'unsupported content type'}, 415, {'Accept': 'application/json,application/x-www-form-urlencoded,text/plain'})
+
+	charset = request.mimetype_params.get('charset', 'utf-8')
+	if charset != 'utf-8':
+		name = name.encode(charset).decode()
+
+	attrs = ['path', 'full_path', 'url', 'base_url',
+		'url_root', 'authorization', 'is_json', 'content_encoding', 'content_type',
+		'endpoint', 'host', 'host_url', 'method', 'origin', 'range', 'mimetype', 'mimetype_params',
+		'referrer', 'remote_addr', 'scheme', 'is_secure', 'url_charset']
+	d = {}
+	for a in sorted(attrs):
+		d[a] = getattr(request, a)
+	d['user_agent'] = str(request.user_agent)
+	d['name'] = name
+	return d
