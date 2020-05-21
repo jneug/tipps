@@ -143,7 +143,7 @@ def tipp_create():
 		template = str(request.json.get('template', 'default'))
 	elif request.mimetype == 'application/x-www-form-urlencoded':
 		content = request.form.get('content', default='', type=str)
-		template = request.args.get('template', default='default', type=str)
+		template = request.form.get('template', default='default', type=str)
 	elif request.mimetype == 'text/plain':
 		content = request.data.decode().strip()
 		template = 'default'
