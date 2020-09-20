@@ -77,6 +77,22 @@ def list_tipps(token=None):
 			})
 	return {'tipps': tipps}
 
+@v1.route('/templates')
+def list_templates():
+	# list template files in templates folder
+	# perhaps makes sense to move the tipp templates to another folder
+	# e.g. assets/templates
+	templates = [
+		'default',
+		'math',
+		'video',
+		'image',
+		'code',
+		'quote',
+		'scratch'
+	]
+	return {'templates': sorted(templates)}
+
 @v1.route('/tipps/<string:id>')
 def tipp_details(id):
 	db = get_db()
