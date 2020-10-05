@@ -116,6 +116,43 @@ def tipp_details(id):
 		return tipp
 	else:
 		return ({'error': 404, 'msg': f'unknown id'}, 404)
+		
+@v1.route('/tipps/<string:id>', methods=['PUT'])
+def tipp_update(id):
+	if request.mimetype == '':
+		return ({'code': 400, 'msg': 'missing content type'}, 400, {'Accept': 'application/json,application/x-www-form-urlencoded,text/plain'})
+
+	if request.is_json:
+		content = str(request.json.get('content', ''))
+		template = str(request.json.get('template', 'default'))
+	elif request.mimetype == 'application/x-www-form-urlencoded':
+		content = request.form.get('content', default='', type=str)
+		template = request.form.get('template', default='default', type=str)
+	elif request.mimetype == 'text/plain':
+		content = request.data.decode().strip()
+		template = 'default'
+	else:
+		return ({'code': 415, 'msg': 'unsupported content type'}, 415, {'Accept': 'application/json,application/x-www-form-urlencoded,text/plain'})
+
+	charset = request.mimetype_params.get('charset', 'utf-8')
+	if charset != 'utf-8':
+		content = content.encode(charset).decode()
+		template = template.encode(charset).decode()
+
+	if len(content.strip()) == 0:
+		return ({'code': 400, 'msg': 'content may not be empty'}, 400)
+
+	timestamp = update_tipp(id, content, template=template)
+
+	db = get_db()
+	db.execute('UPDATE tipp SET compiled = ?, template = ? WHERE id = ?', (timestamp, template, id,))
+	db.commit()
+	
+	return ({
+		'id': id,
+		'compiled': timestamp,
+		'template': template
+	}, 201)
 
 @v1.route('/tipps/<string:id>', methods=['PATCH'])
 def tipp_compile(id):
