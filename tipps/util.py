@@ -53,14 +53,14 @@ def create_tipp(body, id=None, template='default'):
 	qr_path = Path(current_app.config['QRPATH']) / f'{id}.png'
 	qr_img.save(qr_path)
 
-	compile_tipp(id, template=template)
+	compile_tipp(id, template=template, body=body)
 	return id
 
 def update_tipp(id, body, template=None):
 	raw_path = Path(current_app.config['RAWPATH']) / f'{id}.md'
 	raw_path.write_text(body)
 
-	return compile_tipp(id, template=template)
+	return compile_tipp(id, template=template, body=body)
 
 def compile_tipp(id, template='default', body=None):
 	if not body:

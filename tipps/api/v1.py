@@ -152,7 +152,7 @@ def tipp_update(id):
 		'id': id,
 		'compiled': timestamp,
 		'template': template
-	}, 201)
+	}, 200)
 
 @v1.route('/tipps/<string:id>', methods=['PATCH'])
 def tipp_compile(id):
