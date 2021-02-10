@@ -12,7 +12,7 @@ def start():
 	if request.method == 'POST':
 		code = request.form.get('code', default=None, type=str)
 		if code:
-			return redirect(url_for('web.show_tipp', id=id), 303)
+			return redirect(url_for('web.show_tipp', id=code), 303)
 		return render_template('index.html', error='Zu deinem Code konnten wir leider keinen Tipp finden. Hast du dich vielleicht vertippt? Versuch es ruhig noch einmal.')
 	else:
 		return render_template('index.html')
