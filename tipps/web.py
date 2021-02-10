@@ -1,4 +1,4 @@
-from flask import Blueprint, request, current_app, abort, g, send_file, render_template, url_for
+from flask import Blueprint, request, current_app, abort, g, send_file, render_template, redirect, url_for
 
 from pathlib import Path
 
@@ -12,7 +12,7 @@ def start():
 	return render_template('input.html')
 
 @web.route('/create', methods=['POST'])
-def create():
+def create_tipp():
 	content = request.form.get('content', default='', type=str)
 	token = request.form.get('token', default='', type=str)
 	template = request.form.get('template', default='default', type=str)
