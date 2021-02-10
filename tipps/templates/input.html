@@ -75,7 +75,8 @@
 						name: "custom",
 						action: function customFunction(editor){
 							var cm = editor.codemirror;
-							_replaceSelection(cm, false, ['\\\\[', '\\\\]']);
+							text = cm.getSelection();
+							cm.replaceSelection('\\\\[' + text + '\\\\]');
 						},
 						className: "fa fa-calculator",
 						title: "Math",
