@@ -19,16 +19,17 @@
 		<h1>Tipps</h1>
 
 		<div id="content">
-			<form action="/create" method="POST">
+			<form action="/create" method="POST" if="tipp-form">
 			  <div class="row">
 			    <div class="col-md-12">
 			      <label for="token">Token</label>
-			      <input type="text" id="token" placeholder="Token" name="token" />
+			      <input type="text" id="token" placeholder="Token" name="token" value="{{ token }}" />
 			    </div>
 			  </div>
 			  <div class="row">
 			    <div class="col-md-12">
-			      <div id="editor" name="content"></div>
+			    	<textarea id="tipp-content" name="content">{{ content }}</div>
+			      <div id="editor">{{ content }}</div>
 			    </div>
 			  </div>
 			  <div class="row">
@@ -39,11 +40,18 @@
 			</form>
 		</div>
 
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 		<script src="static/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 		<script>
 	    var editor = ace.edit("editor");
 	    editor.setTheme("ace/theme/monokai");
 	    editor.session.setMode("ace/mode/markdown");
+
+	    $('#tipp-content').css('display', 'none');
+
+	    $('tipp-form').submit(function() {
+      	$('#tipp-content').val(editor.getSession().getValue());
+    	});
 		</script>
 	</body>
 </html>
