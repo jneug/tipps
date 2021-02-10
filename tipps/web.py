@@ -30,7 +30,7 @@ def create():
 	db.execute('INSERT INTO tipp (id,user_id,template) VALUES (?, ?, ?)', (id, 0, template,))
 	db.commit()
 
-	return redirect(url_for('show_tipp', id=id), 303)
+	return redirect(url_for('web.show_tipp', id=id), 303)
 
 
 @web.route('/<string:id>')
