@@ -27,7 +27,7 @@ def create():
 
 	id = create_tipp(content, template=template)
 
-	db.execute('INSERT INTO tipp (id,user_id,template) VALUES (?, ?, ?)', (id, user_id, template,))
+	db.execute('INSERT INTO tipp (id,user_id,template) VALUES (?, ?, ?)', (id, user_id['id'], template,))
 	db.commit()
 
 	return redirect(url_for('web.show_tipp', id=id), 303)
