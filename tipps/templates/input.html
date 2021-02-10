@@ -80,15 +80,6 @@
 						action: function customFunction(editor){
 							var cm = editor.codemirror;
 							text = cm.getSelection();
-							cm.replaceSelection('```\n' + text + '\n```');
-						},
-						className: "fa fa-code",
-						title: "Codeblock",
-					}, {
-						name: "custom",
-						action: function customFunction(editor){
-							var cm = editor.codemirror;
-							text = cm.getSelection();
 							cm.replaceSelection('$$' + text + '$$');
 						},
 						className: "fa fa-calculator",
