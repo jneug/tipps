@@ -17,8 +17,16 @@
 		<h1>Tipps</h1>
 
 		<div id="content">
-			{{ error }}
 			<form action="/create" method="POST">
+				{% if error %}
+				<div class="row">
+			    <div class="col-md-12">
+			      <div class="card fluid warning">
+			      	{{ error }}
+			      </div>
+			    </div>
+			  </div>
+			  {% endif %}
 			  <div class="row">
 			    <div class="col-md-12">
 			      <label for="token">Token</label>
