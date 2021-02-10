@@ -71,16 +71,20 @@
     		},
     		codeSyntaxHighlighting: true,
     		toolbar: [
-					{
+	    		     "bold", "italic", "heading",
+	    		"|", "quote", "unordered-list", "ordered-list",
+	    		"|", "link", "image", "code", {
 						name: "custom",
 						action: function customFunction(editor){
 							var cm = editor.codemirror;
 							text = cm.getSelection();
-							cm.replaceSelection('\\\\[' + text + '\\\\]');
+							cm.replaceSelection('$$' + text + '$$');
 						},
 						className: "fa fa-calculator",
 						title: "Math",
 					},
+	    		"|", "preview", "side-by-side", "fullscreen",
+	    		"|", "guide"
 				]
     	});
 		</script>
