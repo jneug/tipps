@@ -10,9 +10,6 @@
 		<link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v3.0.1/dist/mini-default.min.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
 		<style type="text/css" media="screen">
-    #x-tipp-editor {
-        min-height: 10rem;
-    }
 	</style>
 	</head>
 
@@ -21,7 +18,7 @@
 
 		<div id="content">
 			{{ error }}
-			<form action="/create" method="POST" id="tipp-form">
+			<form action="/create" method="POST">
 			  <div class="row">
 			    <div class="col-md-12">
 			      <label for="token">Token</label>
@@ -30,8 +27,7 @@
 			  </div>
 			  <div class="row">
 			    <div class="col-md-12">
-			    	<textarea id="tipp-content" name="content">{{ content }}</textarea>
-			      <div id="tipp-editor">{{ content }}</div>
+			    	<textarea id="editor" name="content">{{ content }}</textarea>
 			    </div>
 			  </div>
 			  <div class="row">
@@ -44,16 +40,14 @@
 
 		<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 		<script>
-	    /*var editor = ace.edit("tipp-editor");
-	    editor.setTheme("ace/theme/monokai");
-	    editor.session.setMode("ace/mode/markdown");
-
-	    $('#tipp-content').css('display', 'none');
-
-	    $('#tipp-form').submit(function() {
-      	$('#tipp-content').val(editor.getSession().getValue());
-    	});*/
-    	var simplemde = new SimpleMDE();
+    	var simplemde = new SimpleMDE({
+    		element: document.getElementById("editor"),
+    		autofocus: true,
+    		autosave: {
+    			enabled: true,
+    			uniqueId: '5853389256'
+    		}
+    	});
 		</script>
 	</body>
 </html>
