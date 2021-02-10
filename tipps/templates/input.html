@@ -18,7 +18,7 @@
 	</head>
 
 	<body>
-		<h1>Tipps</h1>
+		<h1><a href="{{ url_for('web.start') }}">Tipps</a></h1>
 
 		<div id="content">
 			<form action="{{ url_for('web.create') }}" method="POST">
@@ -69,11 +69,22 @@
     			enabled: true,
     			uniqueId: '5853389256'
     		},
-    		codeSyntaxHighlighting: true,
+    		renderingConfig: {
+	    		codeSyntaxHighlighting: true,
+	    	},
     		toolbar: [
-	    		     "bold", "italic", "heading",
+	    		     "bold", "italic", "code", "heading",
 	    		"|", "quote", "unordered-list", "ordered-list",
-	    		"|", "link", "image", "code", {
+	    		"|", "link", "image", {
+						name: "custom",
+						action: function customFunction(editor){
+							var cm = editor.codemirror;
+							text = cm.getSelection();
+							cm.replaceSelection('```\n' + text + '\n```');
+						},
+						className: "fa fa-code",
+						title: "Codeblock",
+					}, {
 						name: "custom",
 						action: function customFunction(editor){
 							var cm = editor.codemirror;
