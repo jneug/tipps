@@ -75,11 +75,9 @@
 						name: "custom",
 						action: function customFunction(editor){
 							var cm = editor.codemirror;
-							var stat = getState(cm);
-							var options = editor.options;
 							_replaceSelection(cm, false, ['\\\\[', '\\\\]']);
 						},
-						className: "fa fa-square-root-alt",
+						className: "fa fa-calculator",
 						title: "Math",
 					},
 				]
