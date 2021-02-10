@@ -12,7 +12,7 @@ def start():
 	return render_template('input.html')
 
 @web.route('/create', methods=['POST'])
-def create_tipp():
+def create():
 	content = request.form.get('content', default='', type=str)
 	token = request.form.get('token', default='', type=str)
 	template = request.form.get('template', default='default', type=str)
