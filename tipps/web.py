@@ -9,7 +9,7 @@ web = Blueprint('web', __name__)
 
 @web.route('/')
 def start():
-	return render_template('input.html')
+	return render_template('input.html', templates=get_templates())
 
 @web.route('/create', methods=['POST'])
 def create():
@@ -18,12 +18,12 @@ def create():
 	template = request.form.get('template', default='default', type=str)
 
 	if len(content.strip()) == 0 or len(token.strip()) == 0:
-		return render_template('input.html', content=content, token=token, template=template, error="Der Inhalt darf nicht leer sein.")
+		return render_template('input.html', content=content, token=token, template=template, templates=get_templates(), error="Der Inhalt darf nicht leer sein.")
 
 	db = get_db()
 	user_id = db.execute('SELECT id FROM user WHERE token = ?', (token,)).fetchone()
 	if not user_id:
-		return render_template('input.html', content=content, token=token, template=template, error="Kein gültiges Token.")
+		return render_template('input.html', content=content, token=token, template=template, templates=get_templates(), error="Kein gültiges Token.")
 
 	id = create_tipp(content, template=template)
 

@@ -23,7 +23,7 @@
 			<form action="/create" method="POST">
 				{% if error %}
 				<div class="row">
-			    <div class="col-md-12">
+			    <div class="col-sm-12">
 			      <div class="card fluid warning">
 			      	<p><span class="icon-alert"></span> {{ error }}</p>
 			      </div>
@@ -31,18 +31,27 @@
 			  </div>
 			  {% endif %}
 			  <div class="row">
-			    <div class="col-md-12">
+			    <div class="col-md-8 col-md-offset-2 col-sm-12">
 			      <label for="token">Token</label>
-			      <input type="text" id="token" placeholder="Token" name="token" value="{{ token }}" />
+			      <input type="password" id="token" placeholder="Token" name="token" value="{{ token }}" style="width: 85%" />
 			    </div>
 			  </div>
 			  <div class="row">
-			    <div class="col-md-12">
+			    <div class="col-sm-12">
 			    	<textarea id="editor" name="content">{{ content }}</textarea>
 			    </div>
 			  </div>
 			  <div class="row">
-			    <div class="col-md-12">
+			    <div class="col-sm-12" style="text-align: right;">
+			    	<select>
+			    	{% for tpl in templates %}
+			    		<option value="{{ tpl }}">{{ tpl }}</option>
+			    	{% endfor %}
+			    	</select>
+			    </div>
+			  </div>
+			  <div class="row">
+			    <div class="col-sm-4 col-sm-offset-8 col-md-3 col-md-offset-9" style="text-align: right;">
 			      <button type="submit" class="primary">Tipp erstellen</button>
 			    </div>
 			  </div>

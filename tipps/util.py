@@ -8,6 +8,17 @@ from pathlib import Path
 from datetime import datetime
 import os
 
+def get_templates():
+	return [
+		'default',
+		'math',
+		'video',
+		'image',
+		'code',
+		'quote',
+		'scratch'
+	]
+
 def generate_id():
 	alphabet = string.ascii_lowercase + string.digits
 	return '-'.join([''.join(choices(alphabet, k=4)) for i in range(3)])

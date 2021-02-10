@@ -82,15 +82,7 @@ def list_templates():
 	# list template files in templates folder
 	# perhaps makes sense to move the tipp templates to another folder
 	# e.g. assets/templates
-	templates = [
-		'default',
-		'math',
-		'video',
-		'image',
-		'code',
-		'quote',
-		'scratch'
-	]
+	templates = get_templates()
 	return {'templates': sorted(templates)}
 
 @v1.route('/tipps/<string:id>')
@@ -116,7 +108,7 @@ def tipp_details(id):
 		return tipp
 	else:
 		return ({'error': 404, 'msg': f'unknown id'}, 404)
-		
+
 @v1.route('/tipps/<string:id>', methods=['PUT'])
 def tipp_update(id):
 	if request.mimetype == '':
@@ -147,7 +139,7 @@ def tipp_update(id):
 	db = get_db()
 	db.execute('UPDATE tipp SET compiled = ?, template = ? WHERE id = ?', (timestamp, template, id,))
 	db.commit()
-	
+
 	return ({
 		'id': id,
 		'compiled': timestamp,
