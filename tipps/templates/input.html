@@ -9,7 +9,12 @@
 
 		<!--<link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v3.0.1/dist/mini-default.min.css">-->
 		<style type="text/css" media="screen">
-    #content {
+    #editor {
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
         min-height: 10rem;
     }
 	</style>
@@ -28,7 +33,7 @@
 			  </div>
 			  <div class="row">
 			    <div class="col-md-12">
-			      <div id="content" name="content"></div>
+			      <div id="editor" name="content"></div>
 			    </div>
 			  </div>
 			  <div class="row">
@@ -41,7 +46,7 @@
 
 		<script src="static/ace/ace.js" type="text/javascript" charset="utf-8"></script>
 		<script>
-	    var editor = ace.edit("content");
+	    var editor = ace.edit("editor");
 	    editor.setTheme("ace/theme/monokai");
 	    editor.session.setMode("ace/mode/markdown");
 		</script>
