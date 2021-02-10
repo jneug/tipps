@@ -18,7 +18,7 @@ def create():
 	template = request.form.get('template', default='default', type=str)
 
 	if len(content.strip()) == 0 or len(token.strip()) == 0:
-		return render_template('input.html', content=content, token=token, template=template, error="Der Inhalt darf nicth leer sein.")
+		return render_template('input.html', content=content, token=token, template=template, error="Der Inhalt darf nicht leer sein.")
 
 	db = get_db()
 	user_id = db.execute('SELECT id FROM user WHERE token = ?', (token,)).fetchone()
