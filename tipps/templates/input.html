@@ -20,7 +20,7 @@
 		<h1>Tipps</h1>
 
 		<div id="content">
-			<form action="/create" method="POST">
+			<form action="{{ url_for('web.create') }}" method="POST">
 				{% if error %}
 				<div class="row">
 			    <div class="col-sm-12">

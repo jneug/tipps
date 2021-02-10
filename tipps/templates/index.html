@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="de">
+	<head>
+		<meta charset="utf-8" />
+		<title>Jonas-Neugebauer.de</title>
+		<meta name="description" content="tipps.ngb.schule" />
+		<meta name="author" content="J. Neugebauer" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v3.0.1/dist/mini-default.min.css">
+	</head>
+
+	<body>
+		<h1>Tipps</h1>
+
+		<div id="content">
+			<form action="{{ url_for('web.start') }}" method="POST">
+			{% if error %}
+			<div class="row">
+		    <div class="col-sm-12">
+		      <div class="card fluid warning">
+		      	<p><span class="icon-alert"></span> {{ error }}</p>
+		      </div>
+		    </div>
+		  </div>
+		  {% endif %}
+		  <div class="row">
+		    <div class="col-sm-3">
+		      <label for="code">Tipp-Code</label>
+		    </div>
+		    <div class="col-sm-6">
+		      <input type="text" id="code" placeholder="Tipp-Code" name="code" value="" style="width: 100%" />
+		    </div>
+		    <div class="col-sm-3">
+		      <button type="submit" class="primary">Tipp anzeigen</button>
+		    </div>
+		  </div>
+			</form>
+		  <div class="row">
+		    <div class="col-sm-6 col-sm-offset-3">
+		    	<a href="{{ url_for('web.create') }}">Einen neuen Tipp erstellen</a>
+		    </div>
+		  </div>
+		</div>
+	</body>
+</html>
