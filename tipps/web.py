@@ -12,7 +12,7 @@ def start():
 	return render_template('gettysetty/input.html')
 
 @web.route('/create', methods=['POST'])
-def start():
+def create():
 	content = request.form.get('content', default='', type=str)
 	token = request.form.get('token', default='', type=str)
 	template = request.form.get('template', default='default', type=str)
