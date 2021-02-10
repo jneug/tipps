@@ -9,7 +9,7 @@ web = Blueprint('web', __name__)
 
 @web.route('/')
 def start():
-	return render_template('gettysetty/input.html')
+	return render_template('input.html')
 
 @web.route('/create', methods=['POST'])
 def create():
