@@ -69,7 +69,20 @@
     			enabled: true,
     			uniqueId: '5853389256'
     		},
-    		codeSyntaxHighlighting: true
+    		codeSyntaxHighlighting: true,
+    		toolbar: [
+					{
+						name: "custom",
+						action: function customFunction(editor){
+							var cm = editor.codemirror;
+							var stat = getState(cm);
+							var options = editor.options;
+							_replaceSelection(cm, false, ['\\\\[', '\\\\]']);
+						},
+						className: "fa fa-square-root-alt",
+						title: "Math",
+					},
+				]
     	});
 		</script>
 	</body>
