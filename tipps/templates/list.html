@@ -9,7 +9,7 @@
 {% if tipps %}
 <ol>
 	{% for tipp in tipps %}
-	<li><a href="{{ url_for('web.edit', id=tipp.id) }}">{{ tipp.id }}</a></li>
+	<li><a href="{{ url_for('web.edit', id=tipp.id) }}">{{ tipp.id }}</a> - <span class="icon-calendar"></span> {{ tipp.created }} | <span class="icon-bookmark"></span> {{ tipp.template }}</li>
 	{% endfor %}
 </ol>
 {% else %}
