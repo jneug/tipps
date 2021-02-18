@@ -1,26 +1,13 @@
-<!DOCTYPE html>
-<html lang="de">
-	<head>
-		<meta charset="utf-8" />
-		<title>Jonas-Neugebauer.de</title>
-		<meta name="description" content="tipps.ngb.schule" />
-		<meta name="author" content="J. Neugebauer" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
+{% extends "partials/base.html" %}
 
-		<link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v3.0.1/dist/mini-default.min.css">
+
+{% block additional_styles %}
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
 		<link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/latest/styles/github.min.css">
-		<style type="text/css" media="screen">
-			.card {
-				padding: 8px 12px;
-			}
-		</style>
-	</head>
+{% endblock %}
 
-	<body>
-		<h1><a href="{{ url_for('web.start') }}">Tipps</a></h1>
 
-		<div id="content">
+{% block content %}
 			<form action="{{ url_for('web.create') }}" method="POST">
 				{% if error %}
 				<div class="row">
@@ -57,8 +44,10 @@
 			    </div>
 			  </div>
 			</form>
-		</div>
+{% endblock %}
 
+
+{% block additional_scripts_foot %}
 		<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/highlight.js/latest/highlight.min.js"></script>
 		<script>
@@ -90,5 +79,4 @@
 				]
     	});
 		</script>
-	</body>
-</html>
+{% endblock %}

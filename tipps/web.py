@@ -17,12 +17,12 @@ def start():
 	else:
 		return render_template('index.html')
 
-@web.route('/list', methods=['GET', 'POST'])
+@web.route('/list')
 def list():
 	token = 'webfij23h87revb03fbre'
 
 	db = get_db()
-	result = db.execute(f'SELECT tipp.id,tipp.created,tipp.template FROM tipp INNER JOIN user ON user.id = tipp.user_id WHERE user.token = {token} ORDER BY tipp.created').fetchall()
+	result = db.execute(f'SELECT tipp.id,tipp.created,tipp.template FROM tipp INNER JOIN user ON user.id = tipp.user_id WHERE user.token = "{token}" ORDER BY tipp.created').fetchall()
 
 	tipps = []
 	for row in result:
@@ -34,6 +34,10 @@ def list():
 			'template': row['template']
 		})
 	return render_template('input.html', tipps=tipps)
+
+@web.route('/edit/<string:id>')
+def edit(id):
+	return f"edit {id}"
 
 @web.route('/create', methods=['GET', 'POST'])
 def create():

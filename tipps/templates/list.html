@@ -1,4 +1,4 @@
-{% extends "patials/base.html" %}
+{% extends "partials/base.html" %}
 
 
 {% block additional_styles %}
@@ -9,7 +9,7 @@
 {% if tipps %}
 <ol>
 	{% for tipp in tipps %}
-	<li><a href="{{ url_for(web.edit, id=tipp.id) }}">{{ tipp.id }}</a></li>
+	<li><a href="{{ url_for(web.list, id=tipp.id) }}">{{ tipp.id }}</a></li>
 	{% endfor %}
 </ol>
 {% else %}
