@@ -33,7 +33,7 @@ def list():
 			'created': row['created'],
 			'template': row['template']
 		})
-	return render_template('input.html', tipps=tipps)
+	return render_template('list.html', tipps=tipps)
 
 @web.route('/edit/<string:id>')
 def edit(id):
