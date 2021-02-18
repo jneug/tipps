@@ -1,0 +1,22 @@
+{% extends "patials/base.html" %}
+
+
+{% block additional_styles %}
+{% endblock %}
+
+
+{% block content %}
+{% if tipps %}
+<ol>
+	{% for tipp in tipps %}
+	<li><a href="{{ url_for(web.edit, id=tipp.id) }}">{{ tipp.id }}</a></li>
+	{% endfor %}
+</ol>
+{% else %}
+Keine Tipps
+{% endif %}
+{% endblock %}
+
+
+{% block additional_scripts_foot %}
+{% endblock %}

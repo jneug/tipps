@@ -17,6 +17,24 @@ def start():
 	else:
 		return render_template('index.html')
 
+@web.route('/list', methods=['GET', 'POST'])
+def list():
+	token = 'webfij23h87revb03fbre'
+
+	db = get_db()
+	result = db.execute(f'SELECT tipp.id,tipp.created,tipp.template FROM tipp INNER JOIN user ON user.id = tipp.user_id WHERE user.token = {token} ORDER BY tipp.created').fetchall()
+
+	tipps = []
+	for row in result:
+		tipps.append({
+			'id': row['id'],
+			'url': get_tipp_url(row["id"]),
+			'qrurl': get_qr_url(row["id"]),
+			'created': row['created'],
+			'template': row['template']
+		})
+	return render_template('input.html', tipps=tipps)
+
 @web.route('/create', methods=['GET', 'POST'])
 def create():
 	if request.method == 'POST':
