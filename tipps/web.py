@@ -35,9 +35,54 @@ def list():
 		})
 	return render_template('list.html', tipps=tipps)
 
-@web.route('/edit/<string:id>')
+@web.route('/edit/<string:id>', methods=['GET', 'POST'])
 def edit(id):
-	return f"edit {id}"
+	if request.method == 'POST':
+		content = request.form.get('content', default='', type=str)
+		token = request.form.get('token', default='', type=str)
+		template = request.form.get('template', default='default', type=str)
+
+		if len(content.strip()) == 0 or len(token.strip()) == 0:
+			return render_template('input.html',
+				form={'type':'create', 'token':token, 'templates':get_templates(), 'error':'Inhalt und Token dürfen nicht leer sein.'},
+				tipp={'content':content, 'template':template}
+			)
+
+		db = get_db()
+		user_id = db.execute('SELECT id FROM user WHERE token = ?', (token,)).fetchone()
+		if not user_id:
+			return render_template('input.html',
+				form={'type':'create', 'token':token, 'templates':get_templates(), 'error':'Kein gültiges Token.'},
+				tipp={'content':content, 'template':template}
+			)
+
+		timestamp = update_tipp(id, content, template=template)
+
+		db.execute('UPDATE tipp SET compiled = ?, template = ? WHERE id = ?', (timestamp, template, id,))
+		db.commit()
+
+		return redirect(url_for('web.show_tipp', id=id), 303)
+	else:
+		token = 'webfij23h87revb03fbre'
+
+		db = get_db()
+		result = db.execute('SELECT tipp.* FROM tipp INNER JOIN user ON user.id = tipp.user_id WHERE tipp.id = ? AND user.token = ?', (id, token,)).fetchone()
+
+		form = {
+			'type': 'edit',
+			'token': token,
+			'templates':get_templates()
+		}
+
+		tipp = dict(result)
+		if result:
+			tipp['content'] = get_tipp_content(id)
+		else:
+			tipp['content'] = ''
+			tipp['template'] = 'default'
+			form['error'] = 'Kein Tipp mit der angegebenen ID gefunden.'
+
+		return render_template('input.html', form=form, tipp=tipp)
 
 @web.route('/create', methods=['GET', 'POST'])
 def create():
@@ -47,12 +92,18 @@ def create():
 		template = request.form.get('template', default='default', type=str)
 
 		if len(content.strip()) == 0 or len(token.strip()) == 0:
-			return render_template('input.html', content=content, token=token, template=template, templates=get_templates(), error="Inhalt und Token dürfen nicht leer sein.")
+			return render_template('input.html',
+				form={'type':'create', 'token':token, 'templates':get_templates(), 'error':'Inhalt und Token dürfen nicht leer sein.'},
+				tipp={'content':content, 'template':template}
+			)
 
 		db = get_db()
 		user_id = db.execute('SELECT id FROM user WHERE token = ?', (token,)).fetchone()
 		if not user_id:
-			return render_template('input.html', content=content, token=token, template=template, templates=get_templates(), error="Kein gültiges Token.")
+			return render_template('input.html',
+				form={'type':'create', 'token':token, 'templates':get_templates(), 'error':'Kein gültiges Token.'},
+				tipp={'content':content, 'template':template}
+			)
 
 		id = create_tipp(content, template=template)
 
@@ -61,7 +112,7 @@ def create():
 
 		return redirect(url_for('web.show_tipp', id=id), 303)
 	else:
-		return render_template('input.html', templates=get_templates())
+		return render_template('input.html', form={'type':'create', 'templates': get_templates()}, tipp={})
 
 
 @web.route('/<string:id>')

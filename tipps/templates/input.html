@@ -8,39 +8,64 @@
 
 
 {% block content %}
+			{% if form.type == 'edit' %}
+			<form action="{{ url_for('web.edit', id=tipp.id) }}" method="POST">
+			{% else %}
 			<form action="{{ url_for('web.create') }}" method="POST">
-				{% if error %}
+			{% endif %}
+				<div class="row">
+			    <div class="col-sm-12">
+			    	{% if form.type == 'edit' %}
+			      <h3>Tipp <a href="{{ url_for('web.show_tipp', id=tipp.id) }}">{{tipp.id}}</a> bearbeiten</h3>
+					  {% else %}
+					  <h3>Neuen Tipp erstellen</h3>
+					  {% endif %}
+			    </div>
+			  </div>
+				{% if form.error %}
 				<div class="row">
 			    <div class="col-sm-12">
 			      <div class="card fluid warning">
-			      	<p><span class="icon-alert"></span> {{ error }}</p>
+			      	<p><span class="icon-alert"></span> {{ form.error }}</p>
 			      </div>
 			    </div>
 			  </div>
 			  {% endif %}
+			  {% if form.type == 'edit' %}
+			  <input type="hidden" id="token" name="token" value="{{ form.token }}" />
+			  {% else %}
 			  <div class="row">
 			    <div class="col-md-8 col-md-offset-2 col-sm-12">
 			      <label for="token">Token</label>
-			      <input type="password" id="token" placeholder="Token" name="token" value="{{ token }}" style="width: 85%" />
+			      <input type="password" id="token" placeholder="Token" name="token" value="{{ form.token }}" style="width: 85%" />
 			    </div>
 			  </div>
+			  {% endif %}
 			  <div class="row">
 			    <div class="col-sm-12">
-			    	<textarea id="editor" name="content">{{ content }}</textarea>
+			    	<textarea id="editor" name="content">{{ tipp.content }}</textarea>
 			    </div>
 			  </div>
 			  <div class="row">
 			    <div class="col-sm-12" style="text-align: right;">
 			    	<select name="template">
-			    	{% for tpl in templates %}
+			    	{% for tpl in form.templates %}
+			    	{% if tipp.template == tpl %}
+			    		<option value="{{ tpl }}" selected>{{ tpl }}</option>
+			    	{% else %}
 			    		<option value="{{ tpl }}">{{ tpl }}</option>
+			    	{% endif %}
 			    	{% endfor %}
 			    	</select>
 			    </div>
 			  </div>
 			  <div class="row">
 			    <div class="col-sm-4 col-sm-offset-8 col-md-3 col-md-offset-9" style="text-align: right;">
-			      <button type="submit" class="primary">Tipp erstellen</button>
+			      {% if form.type == 'edit' %}
+						<button type="submit" class="primary">Tipp bearbeiten</button>
+						{% else %}
+						<button type="submit" class="primary">Tipp erstellen</button>
+						{% endif %}
 			    </div>
 			  </div>
 			</form>
@@ -53,10 +78,11 @@
 		<script>
     	var simplemde = new SimpleMDE({
     		element: document.getElementById("editor"),
+    		initialValue: document.getElementById("editor").value,
     		autofocus: true,
     		autosave: {
     			enabled: true,
-    			uniqueId: '5853389256'
+    			uniqueId: '{% if tipp.id %}{{ tipp.id }}{% else %}5853389256{% endif %}'
     		},
     		renderingConfig: {
 	    		codeSyntaxHighlighting: true,
