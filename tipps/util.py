@@ -8,6 +8,14 @@ from pathlib import Path
 from datetime import datetime
 import os
 
+def generate_id():
+	alphabet = string.ascii_lowercase + string.digits
+	return '-'.join([''.join(choices(alphabet, k=4)) for i in range(3)])
+
+def generate_token():
+	alphabet = string.ascii_letters
+	return ''.join(choices(alphabet, k=32))
+
 def get_templates():
 	return [
 		'default',
@@ -18,14 +26,6 @@ def get_templates():
 		'quote',
 		'scratch'
 	]
-
-def generate_id():
-	alphabet = string.ascii_lowercase + string.digits
-	return '-'.join([''.join(choices(alphabet, k=4)) for i in range(3)])
-
-def generate_token():
-	alphabet = string.ascii_letters
-	return ''.join(choices(alphabet, k=32))
 
 def get_template_name(name):
 	tpl_path = Path(current_app.root_path) / 'templates' / name
@@ -53,6 +53,16 @@ def get_qr_url(id):
 	else:
 		return url_for('web.show_qr', id=id, _external=True)
 	#return f'{current_app.config["BASEURL"]}/qr/{id}'
+
+def get_tipp_content(id):
+	"""
+	Read the tipps content from its raw file.
+	"""
+	raw_path = Path(current_app.config['RAWPATH']) / f'{id}.md'
+	if raw_path.is_file():
+		return raw_path.read_text()
+	else:
+		return '';
 
 def create_tipp(body, id=None, template='default'):
 	id = id if id else generate_id()
