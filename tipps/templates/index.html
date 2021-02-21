@@ -1,19 +1,6 @@
-<!DOCTYPE html>
-<html lang="de">
-	<head>
-		<meta charset="utf-8" />
-		<title>Jonas-Neugebauer.de</title>
-		<meta name="description" content="tipps.ngb.schule" />
-		<meta name="author" content="J. Neugebauer" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
+{% extends "partials/base.html" %}
 
-		<link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v3.0.1/dist/mini-default.min.css">
-	</head>
-
-	<body>
-		<h1>Tipps</h1>
-
-		<div id="content">
+{% block content %}
 			<form action="{{ url_for('web.start') }}" method="POST">
 			{% if error %}
 			<div class="row">
@@ -45,6 +32,4 @@
 		    	<a href="{{ url_for('web.create') }}" class="button tertiary"><span class="icon-edit inverse"></span> Einen neuen Tipp erstellen</a>
 		    </div>
 		  </div>
-		</div>
-	</body>
-</html>
+{% endblock %}
