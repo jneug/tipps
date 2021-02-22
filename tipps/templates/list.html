@@ -12,7 +12,7 @@
 	<li class="card">
 		<div class="section"><a href="{{ url_for('web.show_tipp', id=tipp.id) }}">{{ tipp.id }}</a></div>
 
-		<small><mark><span class="icon-calendar inverse"></span> {{ tipp.created }}</mark> | <span class="icon-bookmark"></span> {{ tipp.template }}</small><br />
+		<div class="section"><small><mark><span class="icon-calendar inverse"></span> {{ tipp.created }}</mark> | <span class="icon-bookmark"></span> {{ tipp.template }}</small><br /></div>
 
 		<div class="section"><a href="{{ url_for('web.edit', id=tipp.id) }}"><mark class="tertiary"><span class="icon-edit inverse"></span> Edit</mark></a> | <a href="#"><mark class="secondary"><span class="icon-lock inverse"></span> Delete</mark></a></div>
 	</li>
