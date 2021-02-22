@@ -22,7 +22,7 @@ def list():
 	token = 'webfij23h87revb03fbre'
 
 	db = get_db()
-	result = db.execute(f'SELECT tipp.id,tipp.created,tipp.template FROM tipp INNER JOIN user ON user.id = tipp.user_id WHERE user.token = "{token}" ORDER BY tipp.created').fetchall()
+	result = db.execute(f'SELECT tipp.id,tipp.created,tipp.template FROM tipp INNER JOIN user ON user.id = tipp.user_id WHERE user.token = "{token}" ORDER BY tipp.created DESC').fetchall()
 
 	tipps = []
 	for row in result:
