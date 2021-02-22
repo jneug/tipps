@@ -10,7 +10,7 @@
 <ol class="row">
 	{% for tipp in tipps %}
 	<li class="card"><a href="{{ url_for('web.show_tipp', id=tipp.id) }}">{{ tipp.id }}</a>
-		<small><a href="{{ url_for('web.edit', id=tipp.id) }}"><mark class="tertiary"><span class="icon-edit inverse"></span> Edit</mark></a> | <mark><span class="icon-calendar inverse"></span> {{ tipp.created }}</mark> | <mark class="secondary"><span class="icon-bookmark inverse"></span> {{ tipp.template }}</mark></small>
+		<small><a href="{{ url_for('web.edit', id=tipp.id) }}"><mark class="tertiary"><span class="icon-edit inverse"></span> Edit</mark></a> | <a href="#"><mark class="secondary"><span class="icon-lock inverse"></span> Delete</mark></a> | <mark><span class="icon-calendar inverse"></span> {{ tipp.created }}</mark> | <span class="icon-bookmark inverse"></span> {{ tipp.template }}</small>
 	</li>
 	{% endfor %}
 </ol>
