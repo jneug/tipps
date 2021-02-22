@@ -9,8 +9,27 @@
 
 		<link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v3.0.1/dist/mini-default.min.css">
 		<style type="text/css" media="screen">
-			.card {
+			.card.warning {
 				padding: 8px 12px;
+			}
+			.card.tipp h4 {
+				margin-bottom: 0;
+			}
+			.card.tipp p.section {
+				text-align: right;
+				padding: 0px 8px 4px 8px;
+			}
+			.card.tipp p.section a mark {
+				padding: 2px 6px 4px 6px;
+			}
+			.card.tipp p.section a:hover {
+				text-decoration: none;
+			}
+			.card.tipp p.section a:hover mark.secondary {
+				background-color: #932020;
+			}
+			.card.tipp p.section a:hover mark.tertiary {
+				background-color: #1e541f;
 			}
 		</style>
 		{% block additional_styles %}{% endblock %}

@@ -7,17 +7,22 @@
 
 {% block content %}
 {% if tipps %}
-<ol class="row">
+<div class="row">
 	{% for tipp in tipps %}
-	<li class="card">
-		<div class="section"><a href="{{ url_for('web.show_tipp', id=tipp.id) }}">{{ tipp.id }}</a></div>
+	<div class="card tipp">
+		<div class="section">
+			<h4><a href="{{ url_for('web.show_tipp', id=tipp.id) }}">{{ tipp.id }}</a></h4>
 
-		<div class="section"><small><mark><span class="icon-calendar inverse"></span> {{ tipp.created }}</mark> | <span class="icon-bookmark"></span> {{ tipp.template }}</small><br /></div>
+			<small><span class="icon-calendar"></span> {{ tipp.created }} | <span class="icon-bookmark"></span> {{ tipp.template }}</small>
+		</div>
 
-		<div class="section"><a href="{{ url_for('web.edit', id=tipp.id) }}"><mark class="tertiary"><span class="icon-edit inverse"></span> Edit</mark></a> | <a href="#"><mark class="secondary"><span class="icon-lock inverse"></span> Delete</mark></a></div>
-	</li>
+		<p class="section"><small>
+			<a href="{{ url_for('web.edit', id=tipp.id) }}"><mark class="tertiary"><span class="icon-edit inverse"></span> Edit</mark></a>
+			<a href="#"><mark class="secondary"><span class="icon-lock inverse"></span> Delete</mark></a>
+		</small></p>
+	</div>
 	{% endfor %}
-</ol>
+</div>
 {% else %}
 Keine Tipps
 {% endif %}
