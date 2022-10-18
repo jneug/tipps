@@ -25,6 +25,7 @@ def get_templates():
 		'video',
 		'image',
 		'code',
+        'mermaid',
 		'quote',
 		'scratch'
 	]
