@@ -11,7 +11,7 @@
 	{% for tipp in tipps %}
 	<div class="card tipp">
 		<div class="section">
-			<h4><a href="{{ url_for('web.show_tipp', id=tipp.id) }}">{{ tipp.id }}</a></h4>
+			<h4><a href="{{ url_for('web.show_tipp', id=tipp.id) }}">{{ tipp.title }}</a> <small>{{ tipp.id }}</small></h4>
 
 			<small><span class="icon-calendar"></span> {{ tipp.created }} | <span class="icon-bookmark"></span> {{ tipp.template }}</small>
 		</div>

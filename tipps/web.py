@@ -28,6 +28,7 @@ def list():
 	for row in result:
 		tipps.append({
 			'id': row['id'],
+            'title': get_tipp_title(row['id']),
 			'url': get_tipp_url(row["id"]),
 			'qrurl': get_qr_url(row["id"]),
 			'created': row['created'],
