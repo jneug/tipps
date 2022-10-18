@@ -25,7 +25,7 @@ def get_templates():
 		'video',
 		'image',
 		'code',
-        'mermaid',
+		'mermaid',
 		'quote',
 		'scratch'
 	]
@@ -45,7 +45,7 @@ def get_template_name(name):
 
 def get_tipp_url(id):
 	if "BASE_URL" in current_app.config:
-	    return f'{current_app.config["BASE_URL"]}/{id}'
+		return f'{current_app.config["BASE_URL"]}/{id}'
 	else:
 		return url_for('web.show_tipp', id=id, _external=True)
 	#return f'{current_app.config["BASEURL"]}/{id}'
@@ -70,13 +70,13 @@ def get_tipp_content(id):
 def get_tipp_title(id):
 	"""
 	Read the tipps first heading from the raw content. Returns
-    the id if no heading exists.
+	the id if no heading exists.
 	"""
 	raw_path = Path(current_app.config['RAWPATH']) / f'{id}.md'
 	if raw_path.is_file():
-        with open(raw_path, "rt") as fh:
-            if m := re.search(r"#+\s+(.*)", fh.readline()):
-                return m.group(1)
+		with open(raw_path, "rt") as fh:
+			if m := re.search(r"#+\s+(.*)", fh.readline()):
+				return m.group(1)
 	else:
 		return id;
 
