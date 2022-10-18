@@ -1,12 +1,14 @@
-from flask import current_app, render_template, Markup, url_for
-
+import os
+import re
 import string
+from datetime import datetime
+from pathlib import Path
 from random import choices
+
 import markdown
 import qrcode
-from pathlib import Path
-from datetime import datetime
-import os
+from flask import Markup, current_app, render_template, url_for
+
 
 def generate_id():
 	alphabet = string.ascii_lowercase + string.digits
