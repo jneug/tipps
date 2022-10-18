@@ -45,7 +45,7 @@ def get_template_name(name):
 
 def get_tipp_url(id):
 	if "BASE_URL" in current_app.config:
-		return f'{current_app.config["BASE_URL"]}/{id}'
+	    return f'{current_app.config["BASE_URL"]}/{id}'
 	else:
 		return url_for('web.show_tipp', id=id, _external=True)
 	#return f'{current_app.config["BASEURL"]}/{id}'
