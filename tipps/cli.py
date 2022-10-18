@@ -1,75 +1,83 @@
-import sqlite3
-import click
 import os
+import sqlite3
 from pathlib import Path
 
+import click
 from flask import current_app, g
 from flask.cli import with_appcontext
 
-from tipps.db import init_db, get_db
+from tipps.db import get_db, init_db
 from tipps.util import compile_tipp
 
-def register_commands(app):
-	app.cli.add_command(init_db_command)
-	app.cli.add_command(recompile_command)
-	app.cli.add_command(maintenance_command)
-	app.cli.add_command(cleanup_command)
-	app.cli.add_command(delete_command)
 
-@click.command('init-db')
+def register_commands(app):
+    app.cli.add_command(init_db_command)
+    app.cli.add_command(recompile_command)
+    app.cli.add_command(maintenance_command)
+    app.cli.add_command(cleanup_command)
+    app.cli.add_command(delete_command)
+
+
+@click.command("init-db")
 @with_appcontext
 def init_db_command():
     """Clear the existing data and create new tables."""
     init_db()
-    click.echo('Initialized the database.')
+    click.echo("Initialized the database.")
 
-@click.command('recompile')
+
+@click.command("recompile")
 @with_appcontext
 def recompile_command():
-	click.echo('Recompiling all known tipps. This might take a while!')
-	db = get_db()
-	result = db.execute('SELECT id,template FROM tipp').fetchall()
-	for tipp in result:
-		compile_tipp(tipp['id'], template=tipp['template'])
-		click.echo(f'Compiled tipp {tipp["id"]}.')
-	click.echo('Done compiling.')
+    click.echo("Recompiling all known tipps. This might take a while!")
+    db = get_db()
+    result = db.execute("SELECT id,template FROM tipp").fetchall()
+    for tipp in result:
+        compile_tipp(tipp["id"], template=tipp["template"])
+        click.echo(f'Compiled tipp {tipp["id"]}.')
+    click.echo("Done compiling.")
 
-@click.command('maintenance')
+
+@click.command("maintenance")
 @with_appcontext
 def maintenance_command():
-	db = get_db()
+    db = get_db()
 
-	raw_path = Path(current_app.config['RAWPATH'])
-	for raw in raw_path.glob('*.md'):
-		result = db.execute('SELECT template FROM tipp WHERE id = ?', (raw.stem,)).fetchone()
-		if not result:
-			db.execute('INSERT INTO tipp (id,user_id) VALUES (?, 1)', (raw.stem,))
-			result = {'template':'default'}
-			click.echo(f'Added tipp {raw.stem} to database.')
-		page_path = Path(current_app.config['PAGEPATH']) / f'{id}.html'
-		if not page_path.is_file():
-			compile_tipp(id, template=result['template'])
-			click.echo(f'Compiled tipp {raw.stem}.')
-	db.commit()
-	click.echo('Done!')
+    raw_path = Path(current_app.config["RAWPATH"])
+    for raw in raw_path.glob("*.md"):
+        result = db.execute(
+            "SELECT template FROM tipp WHERE id = ?", (raw.stem,)
+        ).fetchone()
+        if not result:
+            db.execute("INSERT INTO tipp (id,user_id) VALUES (?, 1)", (raw.stem,))
+            result = {"template": "default"}
+            click.echo(f"Added tipp {raw.stem} to database.")
+        page_path = Path(current_app.config["PAGEPATH"]) / f"{id}.html"
+        if not page_path.is_file():
+            compile_tipp(id, template=result["template"])
+            click.echo(f"Compiled tipp {raw.stem}.")
+    db.commit()
+    click.echo("Done!")
 
-@click.command('delete')
-@click.argument('id')
+
+@click.command("delete")
+@click.argument("id")
 @with_appcontext
 def delete_command(id):
-	db = get_db()
-	db.execute('DELETE FROM tipp WHERE id = ?', (id,))
-	db.commit()
+    db = get_db()
+    db.execute("DELETE FROM tipp WHERE id = ?", (id,))
+    db.commit()
 
-	raw_path = Path(current_app.config['RAWPATH']) / f'{id}.md'
-	if raw_path.is_file():
-		raw_path.unlink()
-	page_path = Path(current_app.config['PAGEPATH']) / f'{id}.html'
-	if page_path.is_file():
-		page_path.unlink()
-	click.echo(f'Tipp {id} deleted.')
+    raw_path = Path(current_app.config["RAWPATH"]) / f"{id}.md"
+    if raw_path.is_file():
+        raw_path.unlink()
+    page_path = Path(current_app.config["PAGEPATH"]) / f"{id}.html"
+    if page_path.is_file():
+        page_path.unlink()
+    click.echo(f"Tipp {id} deleted.")
 
-@click.command('cleanup')
+
+@click.command("cleanup")
 @with_appcontext
 def cleanup_command():
-	click.echo('Cleaning up old tipps.')
+    click.echo("Cleaning up old tipps.")
