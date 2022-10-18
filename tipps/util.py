@@ -75,7 +75,7 @@ def get_tipp_title(id):
 	raw_path = Path(current_app.config['RAWPATH']) / f'{id}.md'
 	if raw_path.is_file():
 		with open(raw_path, "rt") as fh:
-			if m := re.search(r"#+\s+(.*)", fh.readline()):
+			if m := re.search(r"#+\s+(.+)", fh.readline()):
 				return m.group(1)
 	else:
 		return id;
