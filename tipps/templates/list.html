@@ -16,6 +16,8 @@
 			<small><span class="icon-calendar"></span> {{ tipp.created }} | <span class="icon-bookmark"></span> {{ tipp.template }}</small>
 		</div>
 
+		<p>{{ tipp.excerpt|escape }}</p>
+
 		<p class="section"><small>
 			<a href="{{ url_for('web.edit', id=tipp.id) }}"><mark class="tertiary"><span class="icon-edit inverse"></span> Edit</mark></a>
 			<a href="#"><mark class="secondary"><span class="icon-lock inverse"></span> Delete</mark></a>
