@@ -30,17 +30,13 @@ def create_app(test_config=None):
                 # "smarty",
                 # "toc",
                 # "meta",
-                # "fenced_code",
                 # "pymdownx.superfences",
                 # {
                 #     "name": "pymdownx.highlight",
                 #     "anchor_linenums": True,
                 # },
                 # "pymdownx.inlinehilite",
-                {
-                    "name": 'pymdownx.arithmatex',
-                    "generic": True
-                },
+                # 'pymdownx.arithmatex',
                 "pymdownx.caret",
                 "pymdownx.smartsymbols",
                 {
