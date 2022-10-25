@@ -27,3 +27,37 @@
 	width: 100%;
 	height: 100%;
 }
+
+
+
+.admonition {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.admonition .admonition-title {
+    text-transform: uppercase;
+    padding-left: 0.5rem;
+	font-weight: 600;
+	margin-bottom: 1em;
+}
+
+.note {
+    border-color: olive;
+    background-color: #f6fffe;
+}
+
+.tip {
+    border-color: blue;
+    background-color: #f6fcff;
+}
+
+.warning {
+    border-color: orange;
+    background-color: #fffeec;
+}
+
+.error {
+    border-color: red;
+    background-color: #fffbfb;
+}

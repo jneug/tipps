@@ -3,23 +3,41 @@ import markdown
 from flask import current_app, g
 
 
+EXTENSIONS = {
+    "attr_list": None,
+    "def_list": None,
+    "admonition": None,
+    "tables": None,
+    # "footnotes",
+    # "md_in_html",
+    # "smarty",
+    # "toc",
+    # "meta",
+    "pymdownx.superfences": None,
+    # "pymdownx.inlinehilite",
+    # "codehilite",
+    # "fenced_code",
+    "pymdownx.highlight": {
+        "anchor_linenums": True,
+    },
+    'pymdownx.arithmatex': None,
+    "pymdownx.caret": None,
+    "pymdownx.smartsymbols": None,
+    "pymdownx.betterem": {"smart_enable": "all"},
+    "pymdownx.emoji": {
+        "emoji_index": "python/name:materialx.emoji.twemoji",
+        "emoji_generator": "python/name:materialx.emoji.to_svg",
+    },
+    # "pymdownx.snippets",
+    # "pymdownx.details",
+}
+
+
 def get_parser() -> markdown.Markdown:
-    if "mdown" not in g:
-        _config: dict = dict(extensions=list(), extension_config=dict())
-        if "MARKDOWN" in current_app.config:
-            if "extensions" in current_app.config["MARKDOWN"]:
-                for ext in current_app.config["MARKDOWN"]["extensions"]:
-                    if isinstance(ext, str):
-                        _config["extensions"].append(ext)
-                    else:
-                        if "name" in ext:
-                            _name = ext["name"]
-                            del ext["name"]
-
-                            _config["extensions"].append(_name)
-                            _config["extension_config"][_name] = {**ext}
-                del current_app.config["MARKDOWN"]["extensions"]
-            _config.update(current_app.config["MARKDOWN"])
-
-        g.mdown = markdown.Markdown(**_config)
-    return g.mdown
+    _config: dict = dict(extensions=list(), extension_config=dict())
+    for name, conf in EXTENSIONS.items():
+        _config['extensions'].append(name)
+        if conf:
+            _config["extension_config"][name] = conf
+    print(_config)
+    return markdown.Markdown(**_config)

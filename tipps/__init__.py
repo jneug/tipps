@@ -16,42 +16,7 @@ def create_app(test_config=None):
         DATA_PATH=app.instance_path + "/data",
         PAGEPATH=app.instance_path + "/pages",
         QRPATH=app.instance_path + "/qrcodes",
-        RAWPATH=app.instance_path + "/raw",
-        MARKDOWN={
-            "extensions": [
-                "attr_list",
-                "def_list",
-                "admonition",
-                "tables",
-                # "footnotes",
-                # "md_in_html",
-                "codehilite",
-                "fenced_code",
-                # "smarty",
-                # "toc",
-                # "meta",
-                # "pymdownx.superfences",
-                # {
-                #     "name": "pymdownx.highlight",
-                #     "anchor_linenums": True,
-                # },
-                # "pymdownx.inlinehilite",
-                # 'pymdownx.arithmatex',
-                "pymdownx.caret",
-                "pymdownx.smartsymbols",
-                {
-                    "name": "pymdownx.betterem",
-                    "smart_enable": "all",
-                },
-                {
-                    "name": "pymdownx.emoji",
-                    "emoji_index": "!!python/name:materialx.emoji.twemoji",
-                    "emoji_generator": "!!python/name:materialx.emoji.to_svg",
-                },
-                # "pymdownx.snippets",
-                # "pymdownx.details",
-            ]
-        },
+        RAWPATH=app.instance_path + "/raw"
     )
 
     if test_config is None:

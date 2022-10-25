@@ -212,8 +212,8 @@ def show_tipp(id):
             _tipp = get_db().execute("SELECT * FROM tipp WHERE id = ?", (tipp.id,)).fetchone()
             if _tipp:
                 tipp = Tipp(**_tipp)
-                current_app.logger.info(f"Compiling tipp {tipp.id} in debug mode")
-                tipp.compile()
+                # current_app.logger.info(f"Compiling tipp {tipp.id} in debug mode")
+                # tipp.compile()
         return send_file(tipp.page_path, mimetype="text/html")
     else:
         session['tipp-id'] = id
