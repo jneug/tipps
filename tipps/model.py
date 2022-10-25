@@ -270,7 +270,7 @@ class Pagination:
 
     @property
     def last_item(self):
-        return (self.next - 1) * self._per_page
+        return self._page * self._per_page - 1
 
     @property
     def offset(self):
@@ -296,11 +296,10 @@ class Pagination:
         return self._page + self._range >= self._last
 
     def url_for_page(self, page: Optional[int] = None, **kwargs) -> str:
-        if request.view_args:
-            kwargs.update(request.view_args)
-        if page is None:
-            page = self.page
-        return url_for(request.endpoint or ".", **kwargs, page=page)
+        if request.args:
+            kwargs.update(request.args)
+        kwargs["page"] = page or self._page
+        return url_for(request.endpoint or ".", **kwargs)
 
     def url_for_next(self, **kwargs):
         return self.url_for_page(page=self.next, **kwargs)

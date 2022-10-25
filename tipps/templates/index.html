@@ -4,21 +4,22 @@
 <div class="columns">
 	<div class="column is-8 is-offset-2">
 		<form action="{{ url_for('web.start') }}" method="POST">
-			<div class="field">
-				<label class="label">Tipp-Code</label>
-				<div class="control">
-					<input type="text" id="code" placeholder="xxxx-xxxx-xxxx" name="code" value="{{ id }}" class="input is-large" />
-				</div>
-			</div>
-
-			<div class="field container">
-				<div class="control has-text-centered">
-					<button class="button is-primary">
-						<span class="icon">
-							<span class="iconify" data-icon="mdi-card-search-outline"></span>
-						</span>
-						<span>Tipp anzeigen</span>
-					</button>
+			<div class="field is-horizontal">
+				<label class="label is-sr-only">Code</label>
+				<div class="field-body">
+					<div class="field is-expanded">
+						<div class="field has-addons">
+							<p class="control is-expanded">
+								<input type="text" id="code" placeholder="xxxx-xxxx-xxxx" name="code" value="{{ id }}"
+									class="input is-large" />
+							</p>
+							<p class="control has-text-centered">
+								<button class="button is-primary is-large">
+									Tipp anzeigen
+								</button>
+							</p>
+						</div>
+					</div>
 				</div>
 			</div>
 		</form>

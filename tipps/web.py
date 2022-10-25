@@ -1,3 +1,4 @@
+import re
 from pathlib import Path
 
 from flask import (
@@ -19,7 +20,7 @@ from tipps.db import get_db
 from tipps.auth import LoginForm, load_user_by_login
 from tipps.util import *
 from .model import Template, Tipp, User, Pagination
-from .forms import ConfirmDeleteForm
+from .forms import ConfirmDeleteForm, FilterForm
 
 web = Blueprint("web", __name__)
 
@@ -43,6 +44,7 @@ def login():
 
     form = LoginForm()
     if form.validate_on_submit():
+        print("valid")
         if user := load_user_by_login(form.username.data, form.password.data):
             flask_login.login_user(user, remember=current_app.config["REMEMBER_USER"])
             if flask_login.current_user.is_authenticated:
@@ -62,25 +64,60 @@ def logout():
 @flask_login.login_required
 def list():
     token = flask_login.current_user.token
+    query_data = [token]
+
+    filter_form = FilterForm(formdata=request.args)
+    filter_form.template.choices = Template.get_template_names()
+
+    sort = "created" if filter_form.sort.data == "created" else "compiled"
+
+    tpl_filter = ""
+    if filter_form.template.data:
+        tpl_filter = " AND template = ?"
+        query_data.append(filter_form.template.data)
 
     db = get_db()
-    result = db.execute(
-        "SELECT COUNT(*) FROM tipp INNER JOIN user ON user.id = tipp.user_id WHERE user.token = ?",
-        (token,),
-    ).fetchone()
+    if filter_form.search.data:
+        result = db.execute(
+            f"SELECT tipp.* FROM tipp INNER JOIN user ON user.id = tipp.user_id WHERE user.token = ?{tpl_filter} ORDER BY tipp.{sort} DESC",
+            tuple(query_data)
+        ).fetchall()
 
-    pagination = Pagination(per_page=21, items=int(result[0]))
+        re_search = re.compile(re.escape(filter_form.search.data), flags=re.IGNORECASE)
 
-    result = db.execute(
-        "SELECT tipp.* FROM tipp INNER JOIN user ON user.id = tipp.user_id WHERE user.token = ? ORDER BY tipp.compiled DESC LIMIT ? OFFSET ?",
-        (token, pagination.per_page, pagination.first_item),
-    ).fetchall()
+        tipps = []
+        for row in result:
+            _tipp = Tipp(**row)
+            # if filter_form.search.data in _tipp.raw_content:
+            if re_search.search(_tipp.raw_content):
+                tipps.append(_tipp)
+
+        pagination = Pagination(per_page=21, items=len(tipps))
+        print(f"{pagination.first_item=}:{pagination.last_item=}")
+        tipps = tipps[pagination.first_item:pagination.last_item]
+    else:
+        result = db.execute(
+            f"SELECT COUNT(*) FROM tipp INNER JOIN user ON user.id = tipp.user_id WHERE user.token = ?{tpl_filter}",
+            tuple(query_data),
+        ).fetchone()
+
+        pagination = Pagination(per_page=21, items=int(result[0]))
+        query_data.append(pagination.per_page)
+        query_data.append(pagination.first_item)
+
+        result = db.execute(
+            f"SELECT tipp.* FROM tipp INNER JOIN user ON user.id = tipp.user_id WHERE user.token = ?{tpl_filter} ORDER BY tipp.{sort} DESC LIMIT ? OFFSET ?",
+            tuple(query_data)
+        ).fetchall()
+
+        tipps = [Tipp(**row) for row in result]
 
     return render_template(
         "list.html",
-        tipps=[Tipp(**row) for row in result],
+        tipps=tipps,
         pagination=pagination,
-        form=ConfirmDeleteForm()
+        form=ConfirmDeleteForm(),
+        filter=filter_form
     )
 
 
