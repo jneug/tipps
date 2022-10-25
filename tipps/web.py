@@ -72,7 +72,7 @@ def list():
     pagination = Pagination(per_page=21, items=int(result[0]))
 
     result = db.execute(
-        "SELECT tipp.id,tipp.created,tipp.template FROM tipp INNER JOIN user ON user.id = tipp.user_id WHERE user.token = ? ORDER BY tipp.compiled DESC LIMIT ? OFFSET ?",
+        "SELECT tipp.* FROM tipp INNER JOIN user ON user.id = tipp.user_id WHERE user.token = ? ORDER BY tipp.compiled DESC LIMIT ? OFFSET ?",
         (token, pagination.per_page, pagination.first_item),
     ).fetchall()
 
