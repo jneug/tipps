@@ -1,0 +1,69 @@
+{% extends "partials/tipp-base.html" %}
+
+{% set HAS_CODE = tipp.raw_content|regex_search('```') %}
+{% set HAS_MERMAID = tipp.raw_content|regex_search('```\s*mermaid') %}
+{% set HAS_MATH = tipp.raw_content|regex_search('(\$\$.+\$\$)|(\$.+\$)|(\\\(.+\\\))|(\\\[.+\\\])', multiline=True) %}
+
+{% block content %}
+<div class="section">
+	<div class="box content">
+	{{ content }}
+	</div>
+</div>
+{% endblock %}
+
+
+{% block additional_styles %}
+{% if HAS_CODE %}
+<link rel="stylesheet" href="{{ url_for('static', filename='pygments.css') }}">
+{% endif %}
+{% endblock %}
+
+
+{% block additional_scripts_foot %}
+{% if HAS_MATH %}
+<script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+<script>
+window.MathJax = {
+  tex: {
+    inlineMath: [ ["\\(","\\)"] ],
+    displayMath: [ ["\\[","\\]"] ],
+    processEscapes: true,
+    processEnvironments: true
+  },
+  options: {
+    ignoreHtmlClass: ".*",
+    processHtmlClass: "arithmatex"
+  }
+};
+</script>
+{% endif %}
+
+{% if HAS_MERMAID %}
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+	// Prepare code blocks by unpacking <pre><code class="language-mermaid">
+	document.querySelectorAll("pre.mermaid, pre>code.language-mermaid").forEach($el => {
+		// if the second selector got a hit, reference the parent <pre>
+		if ($el.tagName === "CODE")
+			$el = $el.parentElement
+		// put the Mermaid contents in the expected <div class="mermaid">
+		// plus keep the original contents in a nice <details>
+		$el.outerHTML = `
+			<div class="mermaid">${$el.textContent}</div>
+			<!--<details>
+			<summary>Diagram source</summary>
+			<pre>${$el.textContent}</pre>
+			</details>-->
+		`
+	});
+	// Init mermaid
+	mermaid.initialize({
+		theme: (window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches) ?
+			"dark" :
+			"default"
+	});
+</script>
+{% endif %}
+{% endblock %}

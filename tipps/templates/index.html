@@ -1,35 +1,40 @@
 {% extends "partials/base.html" %}
 
 {% block content %}
-			<form action="{{ url_for('web.start') }}" method="POST">
-			{% if error %}
-			<div class="row">
-		    <div class="col-sm-12">
-		      <div class="card fluid warning">
-		      	<p><span class="icon-alert"></span> {{ error }}</p>
-		      </div>
-		    </div>
-		  </div>
-		  {% endif %}
-		  <div class="row">
-		    <div class="col-sm-12 col-md-6 col-md-offset-3">
-		      <label for="code">Tipp-Code</label>
-		    </div>
-		  </div>
-		  <div class="row">
-		    <div class="col-sm-12 col-md-6 col-md-offset-3">
-		      <input type="text" id="code" placeholder="Tipp-Code" name="code" value="" style="width: 100%" />
-		    </div>
-		  </div>
-		  <div class="row">
-		    <div class="col-sm-12 col-md-6 col-md-offset-3">
-		      <button type="submit" class="primary"><span class="icon-link inverse"></span> Tipp anzeigen</button>
-		    </div>
-		  </div>
-			</form>
-		  <div class="row">
-		    <div class="col-sm-12 col-md-6 col-md-offset-3" style="text-align: center;">
-		    	<a href="{{ url_for('web.create') }}" class="button tertiary"><span class="icon-edit inverse"></span> Einen neuen Tipp erstellen</a>
-		    </div>
-		  </div>
+<div class="columns">
+	<div class="column is-8 is-offset-2">
+		<form action="{{ url_for('web.start') }}" method="POST">
+			<div class="field">
+				<label class="label">Tipp-Code</label>
+				<div class="control">
+					<input type="text" id="code" placeholder="xxxx-xxxx-xxxx" name="code" value="{{ id }}" class="input is-large" />
+				</div>
+			</div>
+
+			<div class="field container">
+				<div class="control has-text-centered">
+					<button class="button is-primary">
+						<span class="icon">
+							<span class="iconify" data-icon="mdi-card-search-outline"></span>
+						</span>
+						<span>Tipp anzeigen</span>
+					</button>
+				</div>
+			</div>
+		</form>
+	</div>
+</div>
+
+<div class="columns">
+	<div class="column is-4 is-offset-4 has-text-centered">
+		<a href="{{ url_for('web.create') }}" class="button has-icons-left is-link">
+			<span class="icon-text">
+				<span class="icon">
+					<span class="iconify" data-icon="mdi-receipt-text-plus-outline"></span>
+				</span>
+				<span>Einen neuen Tipp erstellen</span>
+			</span>
+		</a>
+	</div>
+</div>
 {% endblock %}

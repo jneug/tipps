@@ -4,33 +4,60 @@ import string
 from datetime import datetime
 from pathlib import Path
 from random import choices
+from secrets import token_urlsafe, choice
+
+from typing import Optional
 
 import markdown
 import qrcode
 from flask import Markup, current_app, render_template, url_for
+from werkzeug.security import generate_password_hash
 
 
-def generate_id():
+TEMPLATE_PATH = Path("templates/tipp-templates")
+
+
+def mtime(path: Path) -> Optional[datetime]:
+    if path.exists():
+        return datetime.fromtimestamp(os.path.getmtime(str(path)))
+    return None
+
+
+def ctime(path: Path) -> Optional[datetime]:
+    if path.exists():
+        return datetime.fromtimestamp(os.path.getctime(str(path)))
+    return None
+
+
+def generate_id() -> str:
     alphabet = string.ascii_lowercase + string.digits
     return "-".join(["".join(choices(alphabet, k=4)) for i in range(3)])
 
 
-def generate_token():
-    alphabet = string.ascii_letters
-    return "".join(choices(alphabet, k=32))
+def generate_password(length: int = 10) -> str:
+    alphabet = string.ascii_letters + string.digits
+    return ''.join(choice(alphabet) for i in range(length))
+
+
+def generate_token(length: int = 32) -> str:
+    return token_urlsafe(length)
 
 
 def get_templates():
     return ["default", "math", "video", "image", "code", "mermaid", "quote", "scratch"]
 
 
+def get_template_path():
+    return Path(current_app.root_path) / TEMPLATE_PATH
+
+
 def get_template_name(name):
-    tpl_path = Path(current_app.root_path) / "templates" / name
+    tpl_path = get_template_path() / name
     if tpl_path.is_dir():
         tpl_path = tpl_path / "default.html"
         name = f"{name}/default"
     else:
-        tpl_path = Path(current_app.root_path) / "templates" / f"{name}.html"
+        tpl_path = get_template_path() / f"{name}.html"
 
     if tpl_path.is_file():
         return f"{name}.html"

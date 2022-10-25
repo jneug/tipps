@@ -1,4 +1,8 @@
-{% extends "base.html" %}
+{% extends "partials/tipp-base.html" %}
+
+{% block additional_styles %}
+<link rel="stylesheet" href="{{ url_for('static', filename='pygments.css') }}">
+{% endblock %}
 
 {% block additional_scripts_head %}
 	<script src="https://cdn.jsdelivr.net/npm/scratchblocks@3.5.0/build/scratchblocks.min.js"></script>
@@ -213,13 +217,14 @@
 		  "percentTranslated": 100
 	  }
 	});
-		  
+
 		scratchblocks.renderMatching('pre.blocks', {
 		  style:     'scratch2',
 		  languages: ['de'],
 		});
 </script>
 {% endblock %}
+
 
 {% block content %}
 <div class="content-scratch"><pre class="blocks">

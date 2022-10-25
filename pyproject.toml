@@ -1,0 +1,38 @@
+[tool.poetry]
+name = "tipps"
+version = "0.1.0"
+description = "A platform for creating and viewing tipps for teachers and students."
+authors = ["J. Neugebauer <ngb@helmholtz-bi.de>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+Flask = "^2.2.2"
+click = "^8.1.3"
+qrcode = "^7.3.1"
+Flask-WTF = "^1.0.1"
+Markdown = "^3.4.1"
+Flask-Login = "^0.6.2"
+pymdown-extensions = "^9.6"
+Pillow = "^9.2.0"
+jinja2-ansible-filters = "^1.3.2"
+
+[tool.poetry.group.dev.dependencies]
+black = "^22.10.0"
+isort = "^5.10.1"
+mypy = "^0.982"
+flake8 = "^5.0.4"
+types-Markdown = "^3.4.2.1"
+rich = "^12.6.0"
+
+[tool.poetry.group.deploy.dependencies]
+gunicorn = "^20.1.0"
+
+[tool.poe.tasks]
+codestyle = "pygmentize -S default -f html -a .codehilite > static/codehilite.css"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

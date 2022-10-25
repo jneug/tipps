@@ -1,37 +1,193 @@
 {% extends "partials/base.html" %}
 
-
-{% block additional_styles %}
-{% endblock %}
+{% block title %}Liste der Tipps - Tipps{% endblock %}
 
 
 {% block content %}
-{% if tipps %}
 <div class="row">
-	{% for tipp in tipps %}
-	<div class="card tipp">
-		<div class="section">
-			<h4><a href="{{ url_for('web.show_tipp', id=tipp.id) }}">{{ tipp.title }}</a> <small>{{ tipp.id }}</small></h4>
+	{% if tipps %}
+	<div class="columns is-2 is-variable is-multiline">
+		{% for tipp in tipps %}
+		<div class="column is-one-third">
+			<div class="panel tipp is-primary">
+				<header class="panel-heading">
+					<span class="icon-text">
+						<span class="icon">
+							<span class="iconify" data-icon="mdi-card-bulleted-outline"></span>
+						</span>
+						<span><a href="{{ url_for('web.show_tipp', id=tipp.id) }}">{{ tipp.title }}</a></span>
+					</span>
+				</header>
 
-			<small><span class="icon-calendar"></span> {{ tipp.created }} | <span class="icon-bookmark"></span> {{ tipp.template }}</small>
+				<div class="panel-block is-size-7 is-active has-text-weight-semibold has-background-primary-light">
+					<span class="panel-icon">
+						<span class="iconify" data-icon="mdi-key-outline"></span>
+					</span>
+					<span class="tipp-id">{{ tipp.id }}</span>
+				</div>
+
+				<div class="panel-block excerpt is-size-7">
+					{{ tipp.excerpt|escape }}
+				</div>
+
+				<div class="panel-block is-size-7 has-text-grey has-background-white-ter py-1">
+					<span class="panel-icon">
+						<span class="iconify" data-icon="mdi-calendar"></span>
+					</span>
+					{{ tipp.created.strftime("%d.%m.%Y %H:%M") }}
+				</div>
+				<div class="panel-block is-size-7 has-text-grey has-background-white-ter py-1">
+					<span class="panel-icon">
+						<span class="iconify" data-icon="mdi-bookmark"></span>
+					</span>
+					{{ tipp.template }}
+				</div>
+
+				<footer class="panel-block is-justify-content-right">
+					<a href="{{ url_for('web.edit', id=tipp.id) }}" class="tag is-info">
+						<span class="icon-text">
+							<span class="icon">
+								<span class="iconify" data-icon="mdi-pencil"></span>
+							</span>
+							<span>Bearbeiten</span>
+						</span>
+					</a>
+
+					<a class="tag is-danger ml-1 modal-trigger" data-target="modal-confirm">
+						<span class="icon-text">
+							<span class="icon">
+								<span class="iconify" data-icon="mdi-trash"></span>
+							</span>
+							<span>Löschen</span>
+						</span>
+					</a>
+				</footer>
+			</div>
 		</div>
-
-		<p class="section excerpt dark"><small>
-			{{ tipp.excerpt|escape }}
-		</small></p>
-
-		<p class="section footer"><small>
-			<a href="{{ url_for('web.edit', id=tipp.id) }}"><mark class="tertiary"><span class="icon-edit inverse"></span> Edit</mark></a>
-			<a href="#"><mark class="secondary"><span class="icon-lock inverse"></span> Delete</mark></a>
-		</small></p>
+		{% endfor %}
 	</div>
-	{% endfor %}
+
+	{% if pagination.last > 0 %}
+	<nav class="pagination" role="navigation" aria-label="pagination">
+		<a href="{{ pagination.url_for_prev() }}" class="pagination-previous{% if pagination.is_first %} is-disabled{% endif %}">&laquo;</a>
+		<a href="{{ pagination.url_for_next() }}" class="pagination-next{% if pagination.is_last %} is-disabled{% endif %}">&raquo;</a>
+		<ul class="pagination-list">
+			{% if not pagination.is_range_start %}
+			<li>
+				<a href="{{ pagination.url_for_page(pagination.first) }}"
+						class="pagination-link" aria-label="Zu Seite {{ pagination.first }} wechseln">{{ pagination.first }}</a>
+			</li>
+			<li>
+				<span class="pagination-ellipsis">&hellip;</span>
+			</li>
+			{% endif %}
+
+			{% for p in pagination.range() %}
+			<li>
+				<a href="{{ pagination.url_for_page(p) }}"
+					class="pagination-link{% if p == pagination.page %} is-current{% endif %}"
+					aria-label="Zu Seite {{ p }} wechseln">{{ p }}</a>
+			</li>
+			{% endfor %}
+
+			{% if not pagination.is_range_end %}
+			<li>
+				<span class="pagination-ellipsis">&hellip;</span>
+			</li>
+			<li>
+				<a href="{{ pagination.url_for_page(pagination.last) }}"
+						class="pagination-link" aria-label="Zu Seite {{ pagination.last }} wechseln">{{ pagination.last }}</a>
+			</li>
+			{% endif %}
+		</ul>
+		{% endif %}
+	</nav>
+	{% else %}
+	<div class="notification is-info">
+		Keine Tipps vorhanden.
+	</div>
+	{% endif %}
 </div>
-{% else %}
-Keine Tipps
-{% endif %}
+
+<div class="modal" id="modal-confirm">
+	<div class="modal-background"></div>
+	<div class="modal-content">
+		<form action="{{ url_for("web.delete") }}" method="POST">
+			{{ form.hidden_tag() }}
+			<div class="box">
+				Den Tipp <span class="has-text-weight-semibold" id="modal-tipp-id"></span> wirklich löschen?
+			</div>
+			<div class="field is-grouped is-grouped-centered">
+				<div class="control">
+					{{ form.submit(class="button is-danger") }}
+				</div>
+				<div class="control">
+					{{ form.cancel(class="button is-info", id="button-cancel") }}
+				</div>
+			</div>
+		</form>
+	</div>
+	<button class="modal-close is-large" aria-label="close"></button>
+</div>
 {% endblock %}
 
 
 {% block additional_scripts_foot %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Functions to open and close a modal
+  function openModal($el) {
+    $el.classList.add('is-active');
+  }
+
+  function closeModal($el) {
+    $el.classList.remove('is-active');
+  }
+
+  function closeAllModals() {
+    (document.querySelectorAll('.modal') || []).forEach(($modal) => {
+      closeModal($modal);
+    });
+  }
+
+  // Add a click event on buttons to open a specific modal
+  (document.querySelectorAll('.modal-trigger') || []).forEach(($trigger) => {
+    const modal = $trigger.dataset.target;
+    const $target = document.getElementById(modal);
+
+    $trigger.addEventListener('click', () => {
+	  const $id = $trigger.closest('.panel').querySelector('.tipp-id');
+	  document.getElementById("modal-tipp-id").innerHTML = $id.innerHTML;
+	  document.getElementById("tipp").value = $id.innerHTML;
+
+      openModal($target);
+    });
+  });
+
+  // Add a click event on various child elements to close the parent modal
+  (document.querySelectorAll('.modal-background, .modal-close, .modal-card-head .delete, .modal-card-foot .button') || []).forEach(($close) => {
+    const $target = $close.closest('.modal');
+
+    $close.addEventListener('click', () => {
+      closeModal($target);
+    });
+  });
+
+  // Catch cancel button to close modal
+  document.getElementById('button-cancel').addEventListener('click', (ev) => {
+		ev.preventDefault();
+		closeModal(document.getElementById("modal-confirm"));
+		return false;
+	});
+
+  // Add a keyboard event to close all modals
+  document.addEventListener('keydown', (event) => {
+    const e = event || window.event;
+
+    if (e.keyCode === 27) { // Escape key
+      closeAllModals();
+    }
+  });
+});
+</script>
 {% endblock %}

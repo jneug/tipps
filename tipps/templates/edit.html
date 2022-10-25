@@ -1,0 +1,92 @@
+{% extends "partials/base.html" %}
+
+
+{% block additional_styles %}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/highlight.js/latest/styles/github.min.css">
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+	{% if form.type == 'edit' %}
+	<form action="{{ url_for('web.edit', id=tipp.id) }}" method="POST">
+		<h1 class="title">Tipp <a href="{{ url_for('web.show_tipp', id=tipp.id) }}">{{tipp.id}}</a> bearbeiten</h1>
+		{% else %}
+	<form action="{{ url_for('web.create') }}" method="POST">
+		<h1 class="title">Neuen Tipp erstellen</h1>
+		{% endif %}
+
+		<div class="field">
+			<label class="label is-sr-only">Inhalt</label>
+			<div class="control">
+				<textarea id="editor" name="content" class="textarea is-primary">{{ tipp.raw_content }}</textarea>
+			</div>
+		</div>
+
+
+		<div class="field is-grouped is-grouped-right">
+			<label class="label is-sr-only">Vorlage</label>
+			<div class="control has-icons-left">
+				<div class="select">
+					<select name="template">
+						{% for tpl in form.templates %}
+						{% if tipp.template == tpl %}
+						<option value="{{ tpl }}" selected>{{ tpl }}</option>
+						{% else %}
+						<option value="{{ tpl }}">{{ tpl }}</option>
+						{% endif %}
+						{% endfor %}
+					</select>
+				</div>
+				<div class="icon is-left">
+					<span class="iconify" data-icon="mdi-bookmark"></span>
+				</div>
+			</div>
+			<div class="control">
+				{% if form.type == 'edit' %}
+				<button type="submit" class="button is-primary">Tipp bearbeiten</button>
+				{% else %}
+				<button type="submit" class="button is-primary">Tipp erstellen</button>
+				{% endif %}
+			</div>
+		</div>
+	</form>
+</div>
+{% endblock %}
+
+
+{% block additional_scripts_foot %}
+<script src="https://cdn.jsdelivr.net/simplemde/latest/simplemde.min.js"></script>
+<script src="https://cdn.jsdelivr.net/highlight.js/latest/highlight.min.js"></script>
+<script>
+	var simplemde = new SimpleMDE({
+		element: document.getElementById("editor"),
+		initialValue: document.getElementById("editor").value,
+		autofocus: true,
+		autosave: {
+			enabled: true,
+			uniqueId: '{% if tipp.id %}{{ tipp.id }}{% else %}5853389256{% endif %}'
+		},
+		renderingConfig: {
+			codeSyntaxHighlighting: true,
+		},
+		toolbar: [
+			"bold", "italic", "code", "heading",
+			"|", "quote", "unordered-list", "ordered-list",
+			"|", "link", "image", {
+				name: "custom",
+				action: function customFunction(editor) {
+					var cm = editor.codemirror;
+					text = cm.getSelection();
+					cm.replaceSelection('$$' + text + '$$');
+				},
+				className: "fa fa-calculator",
+				title: "Math",
+			},
+			"|", "preview", "side-by-side", "fullscreen",
+			"|", "guide"
+		]
+	});
+</script>
+{% endblock %}

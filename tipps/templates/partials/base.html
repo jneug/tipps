@@ -1,50 +1,122 @@
 <!DOCTYPE html>
 <html lang="de">
-	<head>
-		<meta charset="utf-8" />
-		<title>Tipps</title>
-		<meta name="description" content="tipps.ngb.schule" />
-		<meta name="author" content="J. Neugebauer" />
-		<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-		<link rel="stylesheet" href="https://cdn.rawgit.com/Chalarangelo/mini.css/v3.0.1/dist/mini-default.min.css">
-		<style type="text/css" media="screen">
-			.card.warning {
-				padding: 8px 12px;
-			}
-			.card.tipp h4 {
-				margin-bottom: 0;
-			}
-			.card.tipp p.section.footer {
-				text-align: right;
-				padding: 0px 8px 4px 8px;
-			}
-			.card.tipp p.section.footer a mark {
-				padding: 2px 6px 4px 6px;
-			}
-			.card.tipp p.section.footer a:hover {
-				text-decoration: none;
-			}
-			.card.tipp p.section.footer a:hover mark.secondary {
-				background-color: #932020;
-			}
-			.card.tipp p.section.footer a:hover mark.tertiary {
-				background-color: #1e541f;
-			}
-		</style>
-		{% block additional_styles %}{% endblock %}
+<head>
+	<meta charset="utf-8" />
+	<title>{% block title %}Tipps{% endblock %}</title>
+	<meta name="description" content="tipps.ngb.schule" />
+	<meta name="author" content="J. Neugebauer" />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
 
-		{% block additional_scripts_head %}{% endblock %}
-	</head>
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css">
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+	{% block additional_styles %}{% endblock %}
 
-	<body>
-		<h1><a href="{{ url_for('web.start') }}">Tipps</a></h1>
+	{% block additional_scripts_head %}{% endblock %}
+</head>
 
-		<div id="content">
-		{% block content %}{% endblock %}
+<body>
+	<nav class="navbar is-primary" role="navigation" aria-label="main navigation">
+		<div class="navbar-brand">
+			<a class="navbar-item is-size-4 has-text-weight-bold" href="{{ url_for('web.start') }}">Tipps</a>
+
+			<a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false"
+				data-target="navbarMain">
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+				<span aria-hidden="true"></span>
+			</a>
 		</div>
 
+		<div id="navbarMain" class="navbar-menu">
+			<div class="navbar-end">
+				{% if current_user.is_authenticated %}
+				<a href="{{ url_for('web.create') }}" class="navbar-item">
+					<span class="icon-text">
+						<span class="icon">
+							<span class="iconify" data-icon="mdi-receipt-text-plus-outline"></span>
+						</span>
+						<span>Erstellen</span>
+					</span>
+				</a>
+				<a href="{{ url_for('web.list') }}" class="navbar-item">
+					<span class="icon-text">
+						<span class="icon">
+							<span class="iconify" data-icon="mdi-view-dashboard"></span>
+						</span>
+						<span>Übersicht</span>
+					</span>
+				</a>
+				{% endif %}
 
-		{% block additional_scripts_foot %}{% endblock %}
-	</body>
+				<div class="navbar-item">
+					<div class="buttons">
+						{% if current_user.is_authenticated %}
+						<a href="{{ url_for('web.logout') }}" class="button">
+							<span class="icon">
+								<span class="iconify" data-icon="mdi-logout-variant"></span>
+							</span>
+							<span>Abmelden</span>
+						</a>
+						{% else %}
+						<a href="{{ url_for('web.login') }}" class="button">
+							<span class="icon-text">
+								<span class="icon">
+									<span class="iconify" data-icon="mdi-login-variant"></span>
+								</span>
+								<span>Anmelden</span>
+							</span>
+						</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</nav>
+
+	{% with messages = get_flashed_messages(with_categories=True)%}
+	{% if messages %}
+	<div id="notifications" class="section py-3">
+		<div class="container">
+			{% for category, message in messages %}
+			<div class="notification is-{% if category == 'error' %}danger{% else %}{{ category }}{% endif %} content">
+				{{ message|safe }}
+			</div>
+			{% endfor %}
+		</div>
+	</div>
+	{% endif %}
+	{% endwith %}
+
+	<div id="content" class="section">
+		{% block content %}{% endblock %}
+	</div>
+
+	<script src="//code.iconify.design/1/1.0.6/iconify.min.js"></script>
+	<script>
+		document.addEventListener('DOMContentLoaded', () => {
+
+		// Get all "navbar-burger" elements
+		const $navbarBurgers = Array.prototype.slice.call(document.querySelectorAll('.navbar-burger'), 0);
+
+		// Add a click event on each of them
+		$navbarBurgers.forEach( el => {
+		el.addEventListener('click', () => {
+
+			// Get the target from the "data-target" attribute
+			const target = el.dataset.target;
+			const $target = document.getElementById(target);
+
+			// Toggle the "is-active" class on both the "navbar-burger" and the "navbar-menu"
+			el.classList.toggle('is-active');
+			$target.classList.toggle('is-active');
+
+		});
+		});
+
+		});
+	</script>
+	{% block additional_scripts_foot %}{% endblock %}
+</body>
+
 </html>
