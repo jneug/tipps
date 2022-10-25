@@ -37,7 +37,10 @@ def create_app(test_config=None):
                 #     "anchor_linenums": True,
                 # },
                 # "pymdownx.inlinehilite",
-                'pymdownx.arithmatex',
+                {
+                    "name": 'pymdownx.arithmatex',
+                    "generic": True
+                },
                 "pymdownx.caret",
                 "pymdownx.smartsymbols",
                 {
