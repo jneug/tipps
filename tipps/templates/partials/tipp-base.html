@@ -18,7 +18,8 @@
 <body>
 	<header class="navbar is-primary" role="navigation" aria-label="main navigation">
 		<div class="navbar-brand">
-			<span class="navbar-item is-size-4 has-text-weight-bold">Tipp&nbsp;<a href="{{ tipp.url }}">{{ tipp.id }}</a></span>
+			<a class="navbar-item is-size-4 has-text-weight-bold" href="{{ url_for('web.start') }}">Tipp</a>
+			<span class="navbar-item is-size-4 has-text-weight-bold">{{ tipp.id }}</span>
 		</div>
 	</header>
 
