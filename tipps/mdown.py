@@ -39,5 +39,4 @@ def get_parser() -> markdown.Markdown:
         _config['extensions'].append(name)
         if conf:
             _config["extension_config"][name] = conf
-    print(_config)
     return markdown.Markdown(**_config)
