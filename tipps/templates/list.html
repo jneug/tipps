@@ -40,7 +40,7 @@
 					<span class="panel-icon">
 						<span class="iconify" data-icon="mdi-cog-play"></span>
 					</span>
-					{{ tipp.compiled.strftime("%d.%m.%Y %H:%M:%s") }}
+					{% if tipp.compiled %}{{ tipp.compiled.strftime("%d.%m.%Y %H:%M:%s") }}{% endif %}
 				</div>
 				<div class="panel-block is-size-7 has-text-grey has-background-white-ter py-1">
 					<span class="panel-icon">
