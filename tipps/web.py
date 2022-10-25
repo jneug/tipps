@@ -188,6 +188,8 @@ def create():
 @web.route("/delete", methods=["POST"])
 @flask_login.login_required
 def delete():
+    back = request.referrer or url_for('web.list')
+
     form = ConfirmDeleteForm()
     if form.validate_on_submit():
         if form.submit.data:
@@ -199,9 +201,9 @@ def delete():
             db.commit()
 
             flash(f"Tipp <strong>{tipp.id}</strong> gelöscht.", "success")
-            return redirect(url_for("web.list"))
+            return redirect(back)
     flash("Ein Fehler ist aufgetreten. Es wurden keine Daten gelöscht.", "error")
-    return redirect(url_for("web.list"))
+    return redirect(back)
 
 
 @web.route("/<string:id>")
@@ -212,8 +214,8 @@ def show_tipp(id):
             _tipp = get_db().execute("SELECT * FROM tipp WHERE id = ?", (tipp.id,)).fetchone()
             if _tipp:
                 tipp = Tipp(**_tipp)
-                # current_app.logger.info(f"Compiling tipp {tipp.id} in debug mode")
-                # tipp.compile()
+                current_app.logger.info(f"Compiling tipp {tipp.id} in debug mode")
+                tipp.compile()
         return send_file(tipp.page_path, mimetype="text/html")
     else:
         session['tipp-id'] = id
