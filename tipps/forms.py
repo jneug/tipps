@@ -1,6 +1,6 @@
 
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField, HiddenField, SelectField
+from wtforms import StringField, PasswordField, SubmitField, HiddenField, SelectField, SearchField
 from wtforms.validators import DataRequired
 
 from .model import Template, DEFAULT_TEMPLATE
@@ -22,7 +22,7 @@ class FilterForm(FlaskForm):
     class Meta:
         csrf = False
 
-    search = StringField("Suche")
+    search = SearchField("Suche")
     template = SelectField("Vorlage", default=DEFAULT_TEMPLATE.name)
     sort = SelectField("Sortierung", choices=[("created", "Erstellt"), ("compiled", "Modifiziert")], default="compiled")
     submit = SubmitField("Filtern")
