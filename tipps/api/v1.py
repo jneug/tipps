@@ -1,34 +1,19 @@
 from functools import wraps
 from pathlib import Path
+from dataclasses import asdict
 
 from flask import Blueprint, current_app, g, request
+import flask_login
 
 from tipps.db import get_db
-from tipps.util import *
+from tipps.model import Template, Tipp
 
 
-def restricted(func):
-    @wraps(func)
-    def authenticate(*args, **kwargs):
-        if "Authorization" in request.headers and request.headers[
-            "Authorization"
-        ].startswith("Bearer"):
-            token = request.headers["Authorization"][7:].strip()
-
-            db = get_db()
-            user_id = db.execute(
-                "SELECT id FROM user WHERE token = ?", (token,)
-            ).fetchone()
-            if user_id:
-                request.authorization = {
-                    "type": "bearer",
-                    "user_id": user_id["id"],
-                    "token": token,
-                }
-                return func(*args, **kwargs)
-        return ({"code": 401, "msg": "authentication failed"}, 401)
-
-    return authenticate
+ACCEPTED_MIMETYPES = [
+    "application/json",
+    "application/x-www-form-urlencoded",
+    "text/plain"
+]
 
 
 v1 = Blueprint("api/v1", __name__, url_prefix="/api/v1")
@@ -65,31 +50,33 @@ def list_tipps(token=None):
         filters["user.token"] = token
 
     if len(filters) > 0:
-        where = "WHERE " + ", ".join([f"{k} = ?" for k in filters.keys()])
+        where = " WHERE " + ", ".join([f"{k} = ?" for k in filters.keys()])
     else:
         where = ""
 
     db = get_db()
     result = db.execute(
-        f"SELECT tipp.id,tipp.created,tipp.template FROM tipp INNER JOIN user ON user.id = tipp.user_id {where} ORDER BY {sort} LIMIT {limit} OFFSET {offset}",
+        f"SELECT tipp.* FROM tipp INNER JOIN user ON user.id = tipp.user_id{where} ORDER BY {sort} LIMIT {limit} OFFSET {offset}",
         tuple(filters.values()),
     ).fetchall()
 
     tipps = []
-    if not details:
+    if result:
         for row in result:
-            tipps.append(row["id"])
-    else:
-        for row in result:
-            tipps.append(
-                {
-                    "id": row["id"],
-                    "url": get_tipp_url(row["id"]),
-                    "qrurl": get_qr_url(row["id"]),
-                    "created": row["created"],
-                    "template": row["template"],
-                }
-            )
+            tipp = Tipp(**row)
+            if not details:
+                tipps.append(tipp.id)
+            else:
+                tipps.append(
+                    {
+                        "id": tipp.id,
+                        "url": tipp.url,
+                        "qrurl": tipp.qr_url,
+                        "created": tipp.created,
+                        "compiled": tipp.compiled,
+                        "template": tipp.template.name,
+                    }
+                )
     return {"tipps": tipps}
 
 
@@ -98,7 +85,7 @@ def list_templates():
     # list template files in templates folder
     # perhaps makes sense to move the tipp templates to another folder
     # e.g. assets/templates
-    templates = get_templates()
+    templates = Template.get_template_names()
     return {"templates": sorted(templates)}
 
 
@@ -108,32 +95,29 @@ def tipp_details(id):
 
     result = db.execute("SELECT * FROM tipp WHERE id = ?", (id,)).fetchone()
     if result:
+        _tipp = Tipp(**result)
         tipp = {
-            "id": id,
-            "created": result["created"],
-            "compiled": result["compiled"],
-            "template": result["template"],
-            "url": get_tipp_url(id),
-            "qrurl": get_qr_url(id),
-            "content": "",
+            "id": _tipp.id,
+            "created": _tipp.created,
+            "compiled": _tipp.compiled,
+            "template": _tipp.template.name,
+            "url": _tipp.url,
+            "qrurl": _tipp.qr_url,
+            "content": _tipp.raw_content,
         }
-
-        raw_path = Path(current_app.config["RAWPATH"]) / f"{id}.md"
-        if raw_path.is_file():
-            tipp["content"] = raw_path.read_text()
 
         return tipp
     else:
-        return ({"error": 404, "msg": f"unknown id"}, 404)
+        return ({"error": 404, "msg": "unknown id"}, 404)
 
 
 @v1.route("/tipps/<string:id>", methods=["PUT"])
 def tipp_update(id):
-    if request.mimetype == "":
+    if request.mimetype not in ACCEPTED_MIMETYPES:
         return (
             {"code": 400, "msg": "missing content type"},
             400,
-            {"Accept": "application/json,application/x-www-form-urlencoded,text/plain"},
+            {"Accept": ','.join(ACCEPTED_MIMETYPES)},
         )
 
     if request.is_json:
@@ -149,7 +133,7 @@ def tipp_update(id):
         return (
             {"code": 415, "msg": "unsupported content type"},
             415,
-            {"Accept": "application/json,application/x-www-form-urlencoded,text/plain"},
+            {"Accept": ','.join(ACCEPTED_MIMETYPES)},
         )
 
     charset = request.mimetype_params.get("charset", "utf-8")
@@ -160,76 +144,90 @@ def tipp_update(id):
     if len(content.strip()) == 0:
         return ({"code": 400, "msg": "content may not be empty"}, 400)
 
-    timestamp = update_tipp(id, content, template=template)
+    tipp = Tipp(id, template=template)
+    tipp.save(content)
 
     db = get_db()
     db.execute(
         "UPDATE tipp SET compiled = ?, template = ? WHERE id = ?",
         (
-            timestamp,
-            template,
-            id,
+            tipp.compiled,
+            tipp.template.name,
+            tipp.id,
         ),
     )
     db.commit()
 
-    return ({"id": id, "compiled": timestamp, "template": template}, 200)
+    return ({
+        "id": tipp.id,
+        "compiled": tipp.compiled,
+        "template": tipp.template.name
+    }, 200)
 
 
 @v1.route("/tipps/<string:id>", methods=["PATCH"])
 def tipp_compile(id):
     db = get_db()
-    result = db.execute("SELECT template FROM tipp WHERE id = ?", (id,)).fetchone()
+    result = db.execute("SELECT * FROM tipp WHERE id = ?", (id,)).fetchone()
     if result:
+        tipp = Tipp(**result)
         # TODO: allow form-date / plaintext here?
-        template = str(request.json.get("template", result["template"]))
-        timestamp = compile_tipp(id, template=template)
+        tipp.template = Template(request.json.get("template", tipp.template))
+        tipp.compile()
         db.execute(
             "UPDATE tipp SET compiled = ?, template = ? WHERE id = ?",
             (
-                timestamp,
-                template,
-                id,
+                tipp.compiled,
+                tipp.template.name,
+                tipp.id,
             ),
         )
         db.commit()
-        return {"id": id, "compiled": timestamp, "template": template}
+
+        return ({
+            "id": tipp.id,
+            "compiled": tipp.compiled,
+            "template": tipp.template.name
+        }, 200)
     else:
         return ({"code": 400, "msg": "unknown id"}, 400)
 
 
 @v1.route("/tipps/<string:id>", methods=["DELETE"])
-@restricted
+@flask_login.login_required
 def tipp_delete(id):
     db = get_db()
-    result = db.execute("SELECT user_id FROM tipp WHERE id = ?", (id,)).fetchone()
+    result = db.execute("SELECT * FROM tipp WHERE id = ?", (id,)).fetchone()
+    tipp = Tipp(**result)
+
     if not result:
-        return ({"code": 404, "msg": f"unknown id"}, 404)
-    if result["user_id"] != request.authorization["user_id"]:
-        return ({"code": 403, "msg": f"tipp owned by other token"}, 403)
+        return ({"code": 404, "msg": "unknown id"}, 404)
+    if tipp.user_id != flask_login.current_user.id:
+        return ({"code": 403, "msg": "tipp owned by other user"}, 403)
+
     db.execute(
         "DELETE FROM tipp WHERE id = ? AND user_id = ?",
         (
-            id,
-            request.authorization["user_id"],
+            tipp.id,
+            flask_login.current_user.id,
         ),
     )
     db.commit()
 
     # remove files
-    delete_tipp(id)
+    tipp.delete()
 
     return ("", 204)
 
 
 @v1.route("/tipps", methods=["POST"])
-@restricted
+@flask_login.login_required
 def tipp_create():
-    if request.mimetype == "":
+    if request.mimetype not in ACCEPTED_MIMETYPES:
         return (
             {"code": 400, "msg": "missing content type"},
             400,
-            {"Accept": "application/json,application/x-www-form-urlencoded,text/plain"},
+            {"Accept": ','.join(ACCEPTED_MIMETYPES)},
         )
 
     if request.is_json:
@@ -245,7 +243,7 @@ def tipp_create():
         return (
             {"code": 415, "msg": "unsupported content type"},
             415,
-            {"Accept": "application/json,application/x-www-form-urlencoded,text/plain"},
+            {"Accept": ','.join(ACCEPTED_MIMETYPES)},
         )
 
     charset = request.mimetype_params.get("charset", "utf-8")
@@ -256,15 +254,17 @@ def tipp_create():
     if len(content.strip()) == 0:
         return ({"code": 400, "msg": "content may not be empty"}, 400)
 
-    id = create_tipp(content, template=template)
+    tipp = Tipp()
+    tipp.template = Template(template)
+    tipp.save(content)
 
     db = get_db()
     db.execute(
         "INSERT INTO tipp (id,user_id,template) VALUES (?, ?, ?)",
         (
-            id,
-            request.authorization["user_id"],
-            template,
+            tipp.id,
+            flask_login.current_user.id,
+            tipp.template.name,
         ),
     )
     db.commit()
@@ -272,123 +272,123 @@ def tipp_create():
     return (
         {
             "id": id,
-            "created": datetime.now(),
-            "compiled": datetime.now(),
-            "template": template,
-            "url": get_tipp_url(id),
-            "qrurl": get_qr_url(id),
-            "content": content,
+            "created": tipp.created,
+            "compiled": tipp.compiled,
+            "template": tipp.template.name,
+            "url": tipp.url,
+            "qrurl": tipp.qr_url,
+            "content": tipp.raw_content,
         },
         201,
     )
 
 
-@v1.route("/tokens", methods=["POST"])
-@restricted
-def token_create():
-    if request.mimetype == "":
-        return (
-            {"code": 400, "msg": "missing content type"},
-            400,
-            {"Accept": "application/json,application/x-www-form-urlencoded,text/plain"},
-        )
+# @v1.route("/tokens", methods=["POST"])
+# @flask_login.login_required
+# def token_create():
+#     if request.mimetype not in ACCEPTED_MIMETYPES:
+#         return (
+#             {"code": 400, "msg": "missing content type"},
+#             400,
+#             {"Accept": ','.join(ACCEPTED_MIMETYPES)},
+#         )
 
-    if request.is_json:
-        name = str(request.json.get("name", ""))
-    elif request.mimetype == "application/x-www-form-urlencoded":
-        name = request.form.get("name", default="", type=str)
-    elif request.mimetype == "text/plain":
-        name = request.data.decode().strip()
-    else:
-        return (
-            {"code": 415, "msg": "unsupported content type"},
-            415,
-            {"Accept": "application/json,application/x-www-form-urlencoded,text/plain"},
-        )
+#     if request.is_json:
+#         name = str(request.json.get("name", ""))
+#     elif request.mimetype == "application/x-www-form-urlencoded":
+#         name = request.form.get("name", default="", type=str)
+#     elif request.mimetype == "text/plain":
+#         name = request.data.decode().strip()
+#     else:
+#         return (
+#             {"code": 415, "msg": "unsupported content type"},
+#             415,
+#             {"Accept": ','.join(ACCEPTED_MIMETYPES)},
+#         )
 
-    charset = request.mimetype_params.get("charset", "utf-8")
-    if charset != "utf-8":
-        name = name.encode(charset).decode()
+#     charset = request.mimetype_params.get("charset", "utf-8")
+#     if charset != "utf-8":
+#         name = name.encode(charset).decode()
 
-    if len(name) == 0:
-        return ({"code": 400, "msg": "missing token name"}, 400)
-    else:
-        token = generate_token()
-        user_id = request.authorization["user_id"]
-        user_ip = request.remote_addr
+#     if len(name) == 0:
+#         return ({"code": 400, "msg": "missing token name"}, 400)
+#     else:
+#         token = generate_token()
+#         user_id = request.authorization["user_id"]
+#         user_ip = request.remote_addr
 
-        db = get_db()
-        result = db.execute("SELECT id FROM user WHERE name = ?", (name,)).fetchone()
-        if result:
-            return ({"code": 409, "msg": "token name already in use"}, 409)
-        else:
-            db.execute(
-                "INSERT INTO user (name,token,ip,created_by) VALUES (?, ?, ?, ?)",
-                (
-                    name,
-                    token,
-                    user_ip,
-                    user_id,
-                ),
-            )
-            db.commit()
-            return {"token": token}
+#         db = get_db()
+#         result = db.execute("SELECT id FROM user WHERE name = ?", (name,)).fetchone()
+#         if result:
+#             return ({"code": 409, "msg": "token name already in use"}, 409)
+#         else:
+#             db.execute(
+#                 "INSERT INTO user (name,token,ip,created_by) VALUES (?, ?, ?, ?)",
+#                 (
+#                     name,
+#                     token,
+#                     user_ip,
+#                     user_id,
+#                 ),
+#             )
+#             db.commit()
+#             return {"token": token}
 
 
-@v1.route("/echo", methods=["GET", "POST", "DELETE", "PATCH", "PUT"])
-@restricted
-def echo_route():
-    if request.mimetype == "":
-        return (
-            {"code": 400, "msg": "missing content type"},
-            400,
-            {"Accept": "application/json,application/x-www-form-urlencoded,text/plain"},
-        )
+# @v1.route("/echo", methods=["GET", "POST", "DELETE", "PATCH", "PUT"])
+# @flask_login.login_required
+# def echo_route():
+#     if request.mimetype not in ACCEPTED_MIMETYPES:
+#         return (
+#             {"code": 400, "msg": "missing content type"},
+#             400,
+#             {"Accept": ','.join(ACCEPTED_MIMETYPES)},
+#         )
 
-    if request.is_json:
-        name = str(request.json.get("name", ""))
-    elif request.mimetype == "application/x-www-form-urlencoded":
-        name = request.form.get("name", default="", type=str)
-    elif request.mimetype == "text/plain":
-        name = request.data.decode().strip()
-    else:
-        return (
-            {"code": 415, "msg": "unsupported content type"},
-            415,
-            {"Accept": "application/json,application/x-www-form-urlencoded,text/plain"},
-        )
+#     if request.is_json:
+#         name = str(request.json.get("name", ""))
+#     elif request.mimetype == "application/x-www-form-urlencoded":
+#         name = request.form.get("name", default="", type=str)
+#     elif request.mimetype == "text/plain":
+#         name = request.data.decode().strip()
+#     else:
+#         return (
+#             {"code": 415, "msg": "unsupported content type"},
+#             415,
+#             {"Accept": "application/json,application/x-www-form-urlencoded,text/plain"},
+#         )
 
-    charset = request.mimetype_params.get("charset", "utf-8")
-    if charset != "utf-8":
-        name = name.encode(charset).decode()
+#     charset = request.mimetype_params.get("charset", "utf-8")
+#     if charset != "utf-8":
+#         name = name.encode(charset).decode()
 
-    attrs = [
-        "path",
-        "full_path",
-        "url",
-        "base_url",
-        "url_root",
-        "authorization",
-        "is_json",
-        "content_encoding",
-        "content_type",
-        "endpoint",
-        "host",
-        "host_url",
-        "method",
-        "origin",
-        "range",
-        "mimetype",
-        "mimetype_params",
-        "referrer",
-        "remote_addr",
-        "scheme",
-        "is_secure",
-        "url_charset",
-    ]
-    d = {}
-    for a in sorted(attrs):
-        d[a] = getattr(request, a)
-    d["user_agent"] = str(request.user_agent)
-    d["name"] = name
-    return d
+#     attrs = [
+#         "path",
+#         "full_path",
+#         "url",
+#         "base_url",
+#         "url_root",
+#         "authorization",
+#         "is_json",
+#         "content_encoding",
+#         "content_type",
+#         "endpoint",
+#         "host",
+#         "host_url",
+#         "method",
+#         "origin",
+#         "range",
+#         "mimetype",
+#         "mimetype_params",
+#         "referrer",
+#         "remote_addr",
+#         "scheme",
+#         "is_secure",
+#         "url_charset",
+#     ]
+#     d = {}
+#     for a in sorted(attrs):
+#         d[a] = getattr(request, a)
+#     d["user_agent"] = str(request.user_agent)
+#     d["name"] = name
+#     return d
