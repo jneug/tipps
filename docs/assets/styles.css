@@ -1,0 +1,27 @@
+
+[data-md-color-primary=turquoise] {
+	--md-primary-fg-color: hsl(171, 100%, 41%);
+	--md-primary-fg-color--light: hsl(168, 84%, 85%);
+	--md-primary-fg-color--dark: hsl(166, 100%, 22%);
+	--md-primary-bg-color: #fff;
+	--md-primary-bg-color--light: hsla(0,0%,100%,.7);
+}
+
+.md-typeset :is(.admonition,details):is(.tipps)>:is(.admonition-title,summary) {
+	padding-left: .6rem;
+}
+
+.md-typeset :is(.admonition,details):is(.tipps)>:is(.admonition-title,summary):before {
+	background-color: transparent;
+	-webkit-mask-image: none !important;
+	mask-image: none !important;
+}
+
+.box.tipps {
+	background-color: #fff;
+	border-radius: 6px;
+	box-shadow: 0 .5em 1em -.125em rgba(10,10,10,.1),0 0 0 1px rgba(10,10,10,.02);
+	color: #4a4a4a;
+	display: block;
+	padding: 1.25rem;
+}

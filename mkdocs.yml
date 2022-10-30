@@ -1,0 +1,83 @@
+site_name: Tipps Dokumentation
+site_author: J. Neugebauer
+site_description: Eine einfache Plattform, um Tipps zu erstellen.
+repo_url: https://github.com/jneug/tipps
+repo_name: GitHub
+
+theme:
+    name: material
+    language: de
+    logo: assets/tipps-logo.png
+    favicon: assets/favicon.png
+    features:
+        - navigation.top
+        - navigation.tracking
+        - search.suggest
+    font: false
+    palette:
+        - media: "(prefers-color-scheme: light)"
+          scheme: default
+          primary: turquoise
+          accent: blue
+          toggle:
+              icon: material/weather-sunny
+              name: Dunkles Design aktivieren
+        - media: "(prefers-color-scheme: dark)"
+          scheme: slate
+          primary: blue
+          accent: orange
+          toggle:
+              icon: material/weather-night
+              name: Helles Design aktivieren
+
+extra_css:
+    - assets/styles.css
+
+extra_javascript:
+ - assets/scripts.js
+ - https://polyfill.io/v3/polyfill.min.js?features=es6
+ - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+
+nav:
+    - Was ist Tipps?: index.md
+    - Installation: install.md
+    - Tipps verfassen:
+        - Grundlagen: writing/basics.md
+        - Fortgeschritten: writing/advanced.md
+        - Externe Inhalte: writing/embeds.md
+        - CSS-Stile: writing/styles.md
+    - Technische Details:
+        - Mardkown Erweiterungen: details/extensions.md
+
+markdown_extensions:
+    - admonition
+    - attr_list
+    - def_list
+    - footnotes
+    - md_in_html
+    - toc:
+          permalink: true
+    - pymdownx.magiclink
+    - pymdownx.betterem:
+          smart_enable: all
+    - pymdownx.caret
+    - pymdownx.smartsymbols
+    - pymdownx.emoji:
+          emoji_index: !!python/name:materialx.emoji.twemoji
+          emoji_generator: !!python/name:materialx.emoji.to_svg
+    - pymdownx.highlight:
+          anchor_linenums: true
+    - pymdownx.inlinehilite
+    - pymdownx.snippets
+    - pymdownx.details
+    - pymdownx.superfences:
+        custom_fences:
+            - name: mermaid
+              class: mermaid
+              format: !!python/name:pymdownx.superfences.fence_code_format
+    - pymdownx.arithmatex:
+        generic: true
+
+plugins:
+    - search:
+          lang: de
