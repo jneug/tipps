@@ -16,9 +16,8 @@ from flask import (
 )
 import flask_login
 
-from tipps.db import get_db
-from tipps.auth import LoginForm, load_user_by_login
-from tipps.util import *
+from .db import get_db
+from .auth import LoginForm, load_user_by_login
 from .model import Template, Tipp, User, Pagination
 from .forms import ConfirmDeleteForm, FilterForm
 

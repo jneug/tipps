@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-import tipps
+from tipps import create_app
 
 if __name__ == "__main__":
-    tipps.create_app().run()
+    create_app().run()
