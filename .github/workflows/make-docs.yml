@@ -36,5 +36,3 @@ jobs:
 
       - name: Deploy
         uses: actions/deploy-pages@v1
-        with:
-          token: ${{ secrets.GH_TOKEN }}
