@@ -15,21 +15,8 @@ jobs:
 
       - name: Checkout repository
         uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
-      - name: Set up Python runtime
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ env.PYTHON_VERSION }}
-
-      - name: Install Python dependencies
-        run: |
-          pip install mkdocs-material 
-      
-      - name: Deploy documentation
+      - name: Deploy docs
+        uses: mhausenblas/mkdocs-deploy-gh-pages@master
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
-        run: |
-          mkdocs gh-deploy --force
-          mkdocs --version
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
