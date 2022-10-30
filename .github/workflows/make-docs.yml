@@ -1,15 +1,35 @@
-name: ci 
+name: make-docs
 on:
   push:
     branches:
       - master 
+
+env:
+  PYTHON_VERSION: 3.x
+
 jobs:
-  deploy:
+  documentation:
+    name: Build documentation
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+
+      - name: Checkout repository
+        uses: actions/checkout@v3
         with:
-          python-version: 3.x
-      - run: pip install mkdocs-material 
-      - run: mkdocs gh-deploy --force
+          fetch-depth: 0
+
+      - name: Set up Python runtime
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install Python dependencies
+        run: |
+          pip install mkdocs-material 
+      
+      - name: Deploy documentation
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          mkdocs gh-deploy --force
+          mkdocs --version
