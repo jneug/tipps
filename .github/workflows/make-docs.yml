@@ -32,7 +32,3 @@ jobs:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           mkdocs gh-deploy --force
-          mkdocs --version
-
-      - name: Deploy
-        uses: actions/deploy-pages@v1
