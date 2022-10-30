@@ -46,6 +46,8 @@ nav:
         - Fortgeschritten: writing/advanced.md
         - Externe Inhalte: writing/embeds.md
         - CSS-Stile: writing/styles.md
+    - API:
+        - Übersicht: api.md
     - Technische Details:
         - Mardkown Erweiterungen: details/extensions.md
 

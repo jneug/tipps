@@ -1,4 +1,7 @@
-# Tipps - Der kleine Speicher für Arbeitshinweise
+<div align="center">
+	<img src="assets/tipps-logo.png" width="200px"alt="Tipps Logo" />
+	<h1 class="title">Tipps <span class="subtitle">Der kleine Speicher für Arbeitshinweise</span></h1>
+</div>
 
 Tipps ist eine kleines Web-Tool mit der Idee, auf einfache Weise Tipps und Arbeitshinweise zu erstellen, die per QR-Code an Lernende verteilt werden können.
 

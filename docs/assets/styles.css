@@ -7,6 +7,16 @@
 	--md-primary-bg-color--light: hsla(0,0%,100%,.7);
 }
 
+.title {
+	display: block;
+	font-size: 2rem;
+}
+.subtitle {
+	display: block;
+	font-size: 1rem;
+	font-style: italic;
+}
+
 .md-typeset :is(.admonition,details):is(.tipps)>:is(.admonition-title,summary) {
 	padding-left: .6rem;
 }
