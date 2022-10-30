@@ -36,5 +36,5 @@ jobs:
 
       - name: Deploy
         uses: actions/deploy-pages@v1
-        wirh:
+        with:
           token: ${{ secrets.GH_TOKEN }}
