@@ -1,12 +1,12 @@
 # Tipps verfassen
 
-# Markdown
+Tipps werden ald Text im [Markdown](https://de.wikipedia.org/wiki/Markdown) Format verfasst. 
 
-Markdown ist eine vereinfachte Auszeichnungssprache, die von John Gruber und Aaron Swartz entworfen und im Dezember 2004 mit Version 1.0.1 spezifiziert wurde. Ein Ziel von Markdown ist eine leicht lesbare Ausgangsform bereits vor der Konvertierung. Da es sich bei Markdown-Dokumenten um reine Textdateien handelt, können sie mit einem einfachen Texteditor bearbeitet werden.
+!!! note
+	
+	Markdown ist eine vereinfachte Auszeichnungssprache, die von John Gruber und Aaron Swartz entworfen und im Dezember 2004 mit Version 1.0.1 spezifiziert wurde. Ein Ziel von Markdown ist eine leicht lesbare Ausgangsform bereits vor der Konvertierung. Da es sich bei Markdown-Dokumenten um reine Textdateien handelt, können sie mit einem einfachen Texteditor bearbeitet werden.
 
-Die große Verbreitung von Markdown hat allerdings dazu geführt, dass es mittlerweile eine ganze Reihe an spezialisierten Tools für Markdown gibt (so wie [Zettlr Dokumentation](https://zettlr.com/)). Markdown ist aber darauf angelegt, dass der Text auch ohne spezielles Tools lesbar bleibt, sich aber gleichzeitig einfach in Formate wie PDF oder HTML umwandeln lässt.
-
-Markdown lässt sich vielfältig einsetzen. Probier doch mal einige der Elemente in Sdui aus.
+Markdown bietet Auszeichnungen für Überschriften, Fett- oder Kursivdruck, Links und vieles mehr. Darüber hinaus wurde die Sprache im Laufe der Zeit um weitere Elemente, wie Tabellen, erweitert. Markdown in **Tipps** wurde um eine Vielzahl von Funktionen angereichert, mit denen sich unter anderem mathematisch Formeln oder Diagramme erstellen lassen.
 
 ## Die wichtigsten Elemente
 
