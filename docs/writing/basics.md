@@ -2,7 +2,7 @@
 
 Tipps werden ald Text im [Markdown](https://de.wikipedia.org/wiki/Markdown) Format verfasst. 
 
-!!! note
+!!! info "Markdown"
 	
 	Markdown ist eine vereinfachte Auszeichnungssprache, die von John Gruber und Aaron Swartz entworfen und im Dezember 2004 mit Version 1.0.1 spezifiziert wurde. Ein Ziel von Markdown ist eine leicht lesbare Ausgangsform bereits vor der Konvertierung. Da es sich bei Markdown-Dokumenten um reine Textdateien handelt, können sie mit einem einfachen Texteditor bearbeitet werden.
 
@@ -12,19 +12,27 @@ Markdown bietet Auszeichnungen für Überschriften, Fett- oder Kursivdruck, Link
 
 ### Überschriften
 
-Überschriften verschiedener Ebenen werden mit `#` eingeleitet:
+Überschriften der Ebene Eins bis Sechs werden mit entsprechend vielen `#` gekennzeichnet.
 
+```markdown
+# Ebene 1
+## Ebene 2
+### Ebene 3
+#### Ebene 4
+##### Ebene 5
+###### Ebene 6
 ```
-# H1
-## H2
-### H3
-```
+
+!!! info "Titel eines Tipps"
+
+	Die erste Überschrift wird automatisch als Titel des Tipps genommen. 
 
 ### Textformatierungen
 
-`**fetter Text**` wird zu **fetter Text**.
+Wörter oder Textstellen können hervorgehoben werden. Zu den üblichen Hervorhebungen gehören fetter und kursiver Text. 
 
-`_kursiver Text_` wird zu _kursiver Text_. (Alternativ `*kursiver Text*`.)
+- `**fetter Text**` wird zu **fetter Text**.
+- `_kursiver Text_` wird zu _kursiver Text_. (Alternativ `*kursiver Text*`.)
 
 ### Zitate
 
@@ -32,27 +40,27 @@ Zeilen, die mit `>` starten, werden als Zitate interpretiert.
 
 ```
 > Zitate können auf
->> Merheren Ebenen dargestellt
+>> Mehreren Ebenen dargestellt
+>> werden
 ```
 
 ### Listen
 
-Nummerierte Listen:
-```
+Aufzählungeliszen und nummerierte Listen lassen sich durch `-` und `1.` erstellen. Jeder Listenpunkt wird mit dem entsprechenden Zeichen vorangestellt. Bei nummerierten Listen können die Pubktr auch mit fortlaufenden Zahlen versehen werden. 
+
+```markdown
+- A
+- B
+- C
+
 1. Erstes Element
 2. Zweites Element
 3. Drittes Element
 ```
 
-Aufzählungen:
-```
-- A
-- B
-- C
-```
+Die Listen können auch verschachtelt werden, um mehrere Listenebenen zu erhalten. Dazu werden "innere" Listen unter dem Elternelement eingerückt. Verschachtelte Listen können unterschiedliche Typen haben. 
 
-Die Listen können auch verschachtelt werden:
-
+```markdown
 - A
     - A.1
     - A.2
@@ -61,6 +69,33 @@ Die Listen können auch verschachtelt werden:
     2. B.2
         - B.2.1
 - C
+```
+
+### Horizontale Trennlinie
+
+```markdown
+---
+```
+----
+
+### Links
+
+```
+[Helmholtz Git](https://git.ngb.schule)
+[Wiki](https://informatik-box.de)
+```
+[Helmholtz Git](https://git.ngb.schule)
+[Wiki](https://informatik-box.de)
+
+### Bilder
+
+Bilder können mit einer URL direkt aus dem Internet eingebunden werden, oder aus dem Unterordner `./medien`:
+
+```
+![Bild über Informatik](./medien/computer-science.jpg)
+```
+
+![Bild über Informatik](./medien/computer-science.jpg)
 
 ### Quelltexte
 
@@ -90,33 +125,6 @@ public class Word {
 }
 ```
 
-### Horizontale Trennlinie
-
-```
----
-```
-----
-
-### Links
-
-```
-[Helmholtz Git](https://git.ngb.schule)
-[Wiki](https://informatik-box.de)
-```
-[Helmholtz Git](https://git.ngb.schule)
-[Wiki](https://informatik-box.de)
-
-### Bilder
-
-Bilder können mit einer URL direkt aus dem Internet eingebunden werden, oder aus dem Unterordner `./medien`:
-
-```
-![Bild über Informatik](./medien/computer-science.jpg)
-```
-
-![Bild über Informatik](./medien/computer-science.jpg)
-
-
 ### Tabellen
 
 Die Syntax für Tabellen ist etwas umständlich. Daher ist es leichter diese mit einem Tool wie dem [Markdown Table Editor and Generator](https://tableconvert.com/markdown-generator) zu erstellen und den Code in die Dateien einzufügen.
@@ -130,7 +138,6 @@ Die Syntax für Tabellen ist etwas umständlich. Daher ist es leichter diese mit
 | Eins | Links | Mittig | Rechts |
 |------|:------|:------:|-------:|
 | 0    | 1     | 2      | 3      |
-
 
 
 ## Weiterführende Links
