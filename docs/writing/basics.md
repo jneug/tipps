@@ -1,6 +1,6 @@
 # Tipps verfassen
 
-Tipps werden ald Text im [Markdown](https://de.wikipedia.org/wiki/Markdown) Format verfasst. 
+Tipps werden als Text im [Markdown](https://de.wikipedia.org/wiki/Markdown) Format verfasst. 
 
 !!! info "Markdown"
 	
@@ -14,7 +14,7 @@ Markdown bietet Auszeichnungen für Überschriften, Fett- oder Kursivdruck, Link
 
 Überschriften der Ebene Eins bis Sechs werden mit entsprechend vielen `#` gekennzeichnet.
 
-```markdown
+```markdown title="Beispiel"
 # Ebene 1
 ## Ebene 2
 ### Ebene 3
@@ -25,7 +25,7 @@ Markdown bietet Auszeichnungen für Überschriften, Fett- oder Kursivdruck, Link
 
 !!! info "Titel eines Tipps"
 
-	Die erste Überschrift wird automatisch als Titel des Tipps genommen. 
+	Die erste Überschrift wird automatisch als Titel des Tipps übernommen. 
 
 ### Textformatierungen
 
@@ -38,29 +38,43 @@ Wörter oder Textstellen können hervorgehoben werden. Zu den üblichen Hervorhe
 
 Zeilen, die mit `>` starten, werden als Zitate interpretiert.
 
-```
+```markdown title="Beispiel"
 > Zitate können auf
 >> Mehreren Ebenen dargestellt
 >> werden
 ```
 
+> Zitate können auf
+>> Mehreren Ebenen dargestellt
+>> werden
+
 ### Listen
 
-Aufzählungeliszen und nummerierte Listen lassen sich durch `-` und `1.` erstellen. Jeder Listenpunkt wird mit dem entsprechenden Zeichen vorangestellt. Bei nummerierten Listen können die Pubktr auch mit fortlaufenden Zahlen versehen werden. 
+Aufzählungelisten und nummerierte Listen lassen sich durch `-` und `1.` erstellen. Jeder Listenpunkt wird mit dem entsprechenden Zeichen vorangestellt. Bei nummerierten Listen können die Punkte auch mit fortlaufenden Zahlen versehen werden. 
 
-```markdown
+```markdown title="Beispiel"
+- A
+- B
+- C
+```
+
 - A
 - B
 - C
 
+```markdown title="Beispiel"
 1. Erstes Element
 2. Zweites Element
 3. Drittes Element
 ```
 
+1. Erstes Element
+2. Zweites Element
+3. Drittes Element
+
 Die Listen können auch verschachtelt werden, um mehrere Listenebenen zu erhalten. Dazu werden "innere" Listen unter dem Elternelement eingerückt. Verschachtelte Listen können unterschiedliche Typen haben. 
 
-```markdown
+```markdown title="Beispiel"
 - A
     - A.1
     - A.2
@@ -71,16 +85,26 @@ Die Listen können auch verschachtelt werden, um mehrere Listenebenen zu erhalte
 - C
 ```
 
+- A
+    - A.1
+    - A.2
+- B
+    1. B.1
+    2. B.2
+        - B.2.1
+- C
+
 ### Horizontale Trennlinie
 
-```markdown
+```markdown title="Beispiel"
 ---
 ```
+
 ----
 
 ### Links
 
-```
+```markdown title="Beispiel"
 [Helmholtz Git](https://git.ngb.schule)
 [Wiki](https://informatik-box.de)
 ```
@@ -91,7 +115,7 @@ Die Listen können auch verschachtelt werden, um mehrere Listenebenen zu erhalte
 
 Bilder können mit einer URL direkt aus dem Internet eingebunden werden, oder aus dem Unterordner `./medien`:
 
-```
+```markdown title="Beispiel"
 ![Bild über Informatik](./medien/computer-science.jpg)
 ```
 
@@ -102,6 +126,30 @@ Bilder können mit einer URL direkt aus dem Internet eingebunden werden, oder au
 Codewörter im Text werden mit "Backticks" umrahmt: `code`
 
 Größere Quelltexte werden mit drei "Backticks" umrahmt. Nach den ersten drei kann optional eine Programmiersprache für die Hervorhebung angegeben werden:
+
+````markdown title="Beispiel"
+```java
+public class Word {
+
+    private String english;
+    private String german;
+
+    public Word( String pEnglish, String pGerman ) {
+        english = pEnglish;
+        german = pGerman;
+    }
+
+    public String getGerman() {
+        return german;
+    }
+
+    public String getEnglish() {
+        return english;
+    }
+
+}
+```
+````
 
 ```java
 public class Word {
@@ -129,7 +177,7 @@ public class Word {
 
 Die Syntax für Tabellen ist etwas umständlich. Daher ist es leichter diese mit einem Tool wie dem [Markdown Table Editor and Generator](https://tableconvert.com/markdown-generator) zu erstellen und den Code in die Dateien einzufügen.
 
-```markdown
+```markdown title="Beispiel"
 | Eins | Links | Mittig | Rechts |
 |------|:------|:------:|-------:|
 | 0    | 1     | 2      | 3      |
