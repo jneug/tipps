@@ -13,7 +13,7 @@
       
       
       <link rel="icon" href="../../assets/favicon.png">
-      <meta name="generator" content="mkdocs-1.4.1, mkdocs-material-8.5.7">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.7">
     
     
       
@@ -365,21 +365,6 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#-" class="md-nav__link">
-    ---
-
-  </a>
-  
-    <nav class="md-nav" aria-label="---
-">
-      <ul class="md-nav__list">
-        
           <li class="md-nav__item">
   <a href="#links" class="md-nav__link">
     Links
@@ -642,21 +627,6 @@
   
 </li>
         
-      </ul>
-    </nav>
-  
-</li>
-      
-        <li class="md-nav__item">
-  <a href="#-" class="md-nav__link">
-    ---
-
-  </a>
-  
-    <nav class="md-nav" aria-label="---
-">
-      <ul class="md-nav__list">
-        
           <li class="md-nav__item">
   <a href="#links" class="md-nav__link">
     Links
@@ -718,7 +688,7 @@
 
 
 <h1 id="tipps-verfassen">Tipps verfassen<a class="headerlink" href="#tipps-verfassen" title="Permanent link">&para;</a></h1>
-<p>Tipps werden ald Text im <a href="https://de.wikipedia.org/wiki/Markdown">Markdown</a> Format verfasst. </p>
+<p>Tipps werden als Text im <a href="https://de.wikipedia.org/wiki/Markdown">Markdown</a> Format verfasst. </p>
 <div class="admonition info">
 <p class="admonition-title">Markdown</p>
 <p>Markdown ist eine vereinfachte Auszeichnungssprache, die von John Gruber und Aaron Swartz entworfen und im Dezember 2004 mit Version 1.0.1 spezifiziert wurde. Ein Ziel von Markdown ist eine leicht lesbare Ausgangsform bereits vor der Konvertierung. Da es sich bei Markdown-Dokumenten um reine Textdateien handelt, können sie mit einem einfachen Texteditor bearbeitet werden.</p>
@@ -727,7 +697,7 @@
 <h2 id="die-wichtigsten-elemente">Die wichtigsten Elemente<a class="headerlink" href="#die-wichtigsten-elemente" title="Permanent link">&para;</a></h2>
 <h3 id="uberschriften">Überschriften<a class="headerlink" href="#uberschriften" title="Permanent link">&para;</a></h3>
 <p>Überschriften der Ebene Eins bis Sechs werden mit entsprechend vielen <code>#</code> gekennzeichnet.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gh"># Ebene 1</span>
+<div class="highlight"><span class="filename">Beispiel</span><pre><span></span><code><a id="__codelineno-0-1" name="__codelineno-0-1" href="#__codelineno-0-1"></a><span class="gh"># Ebene 1</span>
 <a id="__codelineno-0-2" name="__codelineno-0-2" href="#__codelineno-0-2"></a><span class="gu">## Ebene 2</span>
 <a id="__codelineno-0-3" name="__codelineno-0-3" href="#__codelineno-0-3"></a><span class="gu">### Ebene 3</span>
 <a id="__codelineno-0-4" name="__codelineno-0-4" href="#__codelineno-0-4"></a><span class="gu">#### Ebene 4</span>
@@ -736,7 +706,7 @@
 </code></pre></div>
 <div class="admonition info">
 <p class="admonition-title">Titel eines Tipps</p>
-<p>Die erste Überschrift wird automatisch als Titel des Tipps genommen. </p>
+<p>Die erste Überschrift wird automatisch als Titel des Tipps übernommen. </p>
 </div>
 <h3 id="textformatierungen">Textformatierungen<a class="headerlink" href="#textformatierungen" title="Permanent link">&para;</a></h3>
 <p>Wörter oder Textstellen können hervorgehoben werden. Zu den üblichen Hervorhebungen gehören fetter und kursiver Text. </p>
@@ -746,72 +716,128 @@
 </ul>
 <h3 id="zitate">Zitate<a class="headerlink" href="#zitate" title="Permanent link">&para;</a></h3>
 <p>Zeilen, die mit <code>&gt;</code> starten, werden als Zitate interpretiert.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a>&gt; Zitate können auf
+<div class="highlight"><span class="filename">Beispiel</span><pre><span></span><code><a id="__codelineno-1-1" name="__codelineno-1-1" href="#__codelineno-1-1"></a><span class="k">&gt; </span><span class="ge">Zitate können auf</span>
 <a id="__codelineno-1-2" name="__codelineno-1-2" href="#__codelineno-1-2"></a>&gt;&gt; Mehreren Ebenen dargestellt
 <a id="__codelineno-1-3" name="__codelineno-1-3" href="#__codelineno-1-3"></a>&gt;&gt; werden
 </code></pre></div>
+<blockquote>
+<p>Zitate können auf</p>
+<blockquote>
+<p>Mehreren Ebenen dargestellt
+werden</p>
+</blockquote>
+</blockquote>
 <h3 id="listen">Listen<a class="headerlink" href="#listen" title="Permanent link">&para;</a></h3>
-<p>Aufzählungeliszen und nummerierte Listen lassen sich durch <code>-</code> und <code>1.</code> erstellen. Jeder Listenpunkt wird mit dem entsprechenden Zeichen vorangestellt. Bei nummerierten Listen können die Pubktr auch mit fortlaufenden Zahlen versehen werden. </p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">-</span> A
+<p>Aufzählungelisten und nummerierte Listen lassen sich durch <code>-</code> und <code>1.</code> erstellen. Jeder Listenpunkt wird mit dem entsprechenden Zeichen vorangestellt. Bei nummerierten Listen können die Punkte auch mit fortlaufenden Zahlen versehen werden. </p>
+<div class="highlight"><span class="filename">Beispiel</span><pre><span></span><code><a id="__codelineno-2-1" name="__codelineno-2-1" href="#__codelineno-2-1"></a><span class="k">-</span> A
 <a id="__codelineno-2-2" name="__codelineno-2-2" href="#__codelineno-2-2"></a><span class="k">-</span> B
 <a id="__codelineno-2-3" name="__codelineno-2-3" href="#__codelineno-2-3"></a><span class="k">-</span> C
-<a id="__codelineno-2-4" name="__codelineno-2-4" href="#__codelineno-2-4"></a>
-<a id="__codelineno-2-5" name="__codelineno-2-5" href="#__codelineno-2-5"></a><span class="k">1.</span> Erstes Element
-<a id="__codelineno-2-6" name="__codelineno-2-6" href="#__codelineno-2-6"></a><span class="k">2.</span> Zweites Element
-<a id="__codelineno-2-7" name="__codelineno-2-7" href="#__codelineno-2-7"></a><span class="k">3.</span> Drittes Element
 </code></pre></div>
+<ul>
+<li>A</li>
+<li>B</li>
+<li>C</li>
+</ul>
+<div class="highlight"><span class="filename">Beispiel</span><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">1.</span> Erstes Element
+<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a><span class="k">2.</span> Zweites Element
+<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a><span class="k">3.</span> Drittes Element
+</code></pre></div>
+<ol>
+<li>Erstes Element</li>
+<li>Zweites Element</li>
+<li>Drittes Element</li>
+</ol>
 <p>Die Listen können auch verschachtelt werden, um mehrere Listenebenen zu erhalten. Dazu werden "innere" Listen unter dem Elternelement eingerückt. Verschachtelte Listen können unterschiedliche Typen haben. </p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-3-1" name="__codelineno-3-1" href="#__codelineno-3-1"></a><span class="k">-</span> A
-<a id="__codelineno-3-2" name="__codelineno-3-2" href="#__codelineno-3-2"></a>    <span class="k">-</span> A.1
-<a id="__codelineno-3-3" name="__codelineno-3-3" href="#__codelineno-3-3"></a>    <span class="k">-</span> A.2
-<a id="__codelineno-3-4" name="__codelineno-3-4" href="#__codelineno-3-4"></a><span class="k">-</span> B
-<a id="__codelineno-3-5" name="__codelineno-3-5" href="#__codelineno-3-5"></a>    <span class="k">1.</span> B.1
-<a id="__codelineno-3-6" name="__codelineno-3-6" href="#__codelineno-3-6"></a>    <span class="k">2.</span> B.2
-<a id="__codelineno-3-7" name="__codelineno-3-7" href="#__codelineno-3-7"></a>        <span class="k">-</span> B.2.1
-<a id="__codelineno-3-8" name="__codelineno-3-8" href="#__codelineno-3-8"></a><span class="k">-</span> C
+<div class="highlight"><span class="filename">Beispiel</span><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a><span class="k">-</span> A
+<a id="__codelineno-4-2" name="__codelineno-4-2" href="#__codelineno-4-2"></a>    <span class="k">-</span> A.1
+<a id="__codelineno-4-3" name="__codelineno-4-3" href="#__codelineno-4-3"></a>    <span class="k">-</span> A.2
+<a id="__codelineno-4-4" name="__codelineno-4-4" href="#__codelineno-4-4"></a><span class="k">-</span> B
+<a id="__codelineno-4-5" name="__codelineno-4-5" href="#__codelineno-4-5"></a>    <span class="k">1.</span> B.1
+<a id="__codelineno-4-6" name="__codelineno-4-6" href="#__codelineno-4-6"></a>    <span class="k">2.</span> B.2
+<a id="__codelineno-4-7" name="__codelineno-4-7" href="#__codelineno-4-7"></a>        <span class="k">-</span> B.2.1
+<a id="__codelineno-4-8" name="__codelineno-4-8" href="#__codelineno-4-8"></a><span class="k">-</span> C
 </code></pre></div>
+<ul>
+<li>A<ul>
+<li>A.1</li>
+<li>A.2</li>
+</ul>
+</li>
+<li>B<ol>
+<li>B.1</li>
+<li>B.2<ul>
+<li>B.2.1</li>
+</ul>
+</li>
+</ol>
+</li>
+<li>C</li>
+</ul>
 <h3 id="horizontale-trennlinie">Horizontale Trennlinie<a class="headerlink" href="#horizontale-trennlinie" title="Permanent link">&para;</a></h3>
-<h2 id="-"><div class="highlight"><pre><span></span><code><a id="__codelineno-4-1" name="__codelineno-4-1" href="#__codelineno-4-1"></a>---
-</code></pre></div><a class="headerlink" href="#-" title="Permanent link">&para;</a></h2>
+<div class="highlight"><span class="filename">Beispiel</span><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>---
+</code></pre></div>
+<hr />
 <h3 id="links">Links<a class="headerlink" href="#links" title="Permanent link">&para;</a></h3>
-<p><div class="highlight"><pre><span></span><code><a id="__codelineno-5-1" name="__codelineno-5-1" href="#__codelineno-5-1"></a>[Helmholtz Git](https://git.ngb.schule)
-<a id="__codelineno-5-2" name="__codelineno-5-2" href="#__codelineno-5-2"></a>[Wiki](https://informatik-box.de)
+<p><div class="highlight"><span class="filename">Beispiel</span><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>[<span class="nt">Helmholtz Git</span>](<span class="na">https://git.ngb.schule</span>)
+<a id="__codelineno-6-2" name="__codelineno-6-2" href="#__codelineno-6-2"></a>[<span class="nt">Wiki</span>](<span class="na">https://informatik-box.de</span>)
 </code></pre></div>
 <a href="https://git.ngb.schule">Helmholtz Git</a>
 <a href="https://informatik-box.de">Wiki</a></p>
 <h3 id="bilder">Bilder<a class="headerlink" href="#bilder" title="Permanent link">&para;</a></h3>
 <p>Bilder können mit einer URL direkt aus dem Internet eingebunden werden, oder aus dem Unterordner <code>./medien</code>:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-6-1" name="__codelineno-6-1" href="#__codelineno-6-1"></a>![Bild über Informatik](./medien/computer-science.jpg)
+<div class="highlight"><span class="filename">Beispiel</span><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a>![<span class="nt">Bild über Informatik</span>](<span class="na">./medien/computer-science.jpg</span>)
 </code></pre></div>
 <p><img alt="Bild über Informatik" src="./medien/computer-science.jpg" /></p>
 <h3 id="quelltexte">Quelltexte<a class="headerlink" href="#quelltexte" title="Permanent link">&para;</a></h3>
 <p>Codewörter im Text werden mit "Backticks" umrahmt: <code>code</code></p>
 <p>Größere Quelltexte werden mit drei "Backticks" umrahmt. Nach den ersten drei kann optional eine Programmiersprache für die Hervorhebung angegeben werden:</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-7-1" name="__codelineno-7-1" href="#__codelineno-7-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Word</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<a id="__codelineno-7-2" name="__codelineno-7-2" href="#__codelineno-7-2"></a>
-<a id="__codelineno-7-3" name="__codelineno-7-3" href="#__codelineno-7-3"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">english</span><span class="p">;</span><span class="w"></span>
-<a id="__codelineno-7-4" name="__codelineno-7-4" href="#__codelineno-7-4"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">german</span><span class="p">;</span><span class="w"></span>
-<a id="__codelineno-7-5" name="__codelineno-7-5" href="#__codelineno-7-5"></a>
-<a id="__codelineno-7-6" name="__codelineno-7-6" href="#__codelineno-7-6"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">Word</span><span class="p">(</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">pEnglish</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">pGerman</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<a id="__codelineno-7-7" name="__codelineno-7-7" href="#__codelineno-7-7"></a><span class="w">        </span><span class="n">english</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pEnglish</span><span class="p">;</span><span class="w"></span>
-<a id="__codelineno-7-8" name="__codelineno-7-8" href="#__codelineno-7-8"></a><span class="w">        </span><span class="n">german</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pGerman</span><span class="p">;</span><span class="w"></span>
-<a id="__codelineno-7-9" name="__codelineno-7-9" href="#__codelineno-7-9"></a><span class="w">    </span><span class="p">}</span><span class="w"></span>
-<a id="__codelineno-7-10" name="__codelineno-7-10" href="#__codelineno-7-10"></a>
-<a id="__codelineno-7-11" name="__codelineno-7-11" href="#__codelineno-7-11"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getGerman</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<a id="__codelineno-7-12" name="__codelineno-7-12" href="#__codelineno-7-12"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">german</span><span class="p">;</span><span class="w"></span>
-<a id="__codelineno-7-13" name="__codelineno-7-13" href="#__codelineno-7-13"></a><span class="w">    </span><span class="p">}</span><span class="w"></span>
-<a id="__codelineno-7-14" name="__codelineno-7-14" href="#__codelineno-7-14"></a>
-<a id="__codelineno-7-15" name="__codelineno-7-15" href="#__codelineno-7-15"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getEnglish</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
-<a id="__codelineno-7-16" name="__codelineno-7-16" href="#__codelineno-7-16"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">english</span><span class="p">;</span><span class="w"></span>
-<a id="__codelineno-7-17" name="__codelineno-7-17" href="#__codelineno-7-17"></a><span class="w">    </span><span class="p">}</span><span class="w"></span>
-<a id="__codelineno-7-18" name="__codelineno-7-18" href="#__codelineno-7-18"></a>
-<a id="__codelineno-7-19" name="__codelineno-7-19" href="#__codelineno-7-19"></a><span class="p">}</span><span class="w"></span>
+<div class="highlight"><span class="filename">Beispiel</span><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a><span class="sb">```java</span>
+<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Word</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>
+<a id="__codelineno-8-4" name="__codelineno-8-4" href="#__codelineno-8-4"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">english</span><span class="p">;</span><span class="w"></span>
+<a id="__codelineno-8-5" name="__codelineno-8-5" href="#__codelineno-8-5"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">german</span><span class="p">;</span><span class="w"></span>
+<a id="__codelineno-8-6" name="__codelineno-8-6" href="#__codelineno-8-6"></a>
+<a id="__codelineno-8-7" name="__codelineno-8-7" href="#__codelineno-8-7"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">Word</span><span class="p">(</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">pEnglish</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">pGerman</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-8-8" name="__codelineno-8-8" href="#__codelineno-8-8"></a><span class="w">        </span><span class="n">english</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pEnglish</span><span class="p">;</span><span class="w"></span>
+<a id="__codelineno-8-9" name="__codelineno-8-9" href="#__codelineno-8-9"></a><span class="w">        </span><span class="n">german</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pGerman</span><span class="p">;</span><span class="w"></span>
+<a id="__codelineno-8-10" name="__codelineno-8-10" href="#__codelineno-8-10"></a><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<a id="__codelineno-8-11" name="__codelineno-8-11" href="#__codelineno-8-11"></a>
+<a id="__codelineno-8-12" name="__codelineno-8-12" href="#__codelineno-8-12"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getGerman</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-8-13" name="__codelineno-8-13" href="#__codelineno-8-13"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">german</span><span class="p">;</span><span class="w"></span>
+<a id="__codelineno-8-14" name="__codelineno-8-14" href="#__codelineno-8-14"></a><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<a id="__codelineno-8-15" name="__codelineno-8-15" href="#__codelineno-8-15"></a>
+<a id="__codelineno-8-16" name="__codelineno-8-16" href="#__codelineno-8-16"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getEnglish</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-8-17" name="__codelineno-8-17" href="#__codelineno-8-17"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">english</span><span class="p">;</span><span class="w"></span>
+<a id="__codelineno-8-18" name="__codelineno-8-18" href="#__codelineno-8-18"></a><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<a id="__codelineno-8-19" name="__codelineno-8-19" href="#__codelineno-8-19"></a>
+<a id="__codelineno-8-20" name="__codelineno-8-20" href="#__codelineno-8-20"></a><span class="p">}</span><span class="w"></span>
+<a id="__codelineno-8-21" name="__codelineno-8-21" href="#__codelineno-8-21"></a><span class="sb">```</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><a id="__codelineno-9-1" name="__codelineno-9-1" href="#__codelineno-9-1"></a><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Word</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-9-2" name="__codelineno-9-2" href="#__codelineno-9-2"></a>
+<a id="__codelineno-9-3" name="__codelineno-9-3" href="#__codelineno-9-3"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">english</span><span class="p">;</span><span class="w"></span>
+<a id="__codelineno-9-4" name="__codelineno-9-4" href="#__codelineno-9-4"></a><span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">german</span><span class="p">;</span><span class="w"></span>
+<a id="__codelineno-9-5" name="__codelineno-9-5" href="#__codelineno-9-5"></a>
+<a id="__codelineno-9-6" name="__codelineno-9-6" href="#__codelineno-9-6"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">Word</span><span class="p">(</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">pEnglish</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">pGerman</span><span class="w"> </span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-9-7" name="__codelineno-9-7" href="#__codelineno-9-7"></a><span class="w">        </span><span class="n">english</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pEnglish</span><span class="p">;</span><span class="w"></span>
+<a id="__codelineno-9-8" name="__codelineno-9-8" href="#__codelineno-9-8"></a><span class="w">        </span><span class="n">german</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">pGerman</span><span class="p">;</span><span class="w"></span>
+<a id="__codelineno-9-9" name="__codelineno-9-9" href="#__codelineno-9-9"></a><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<a id="__codelineno-9-10" name="__codelineno-9-10" href="#__codelineno-9-10"></a>
+<a id="__codelineno-9-11" name="__codelineno-9-11" href="#__codelineno-9-11"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getGerman</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-9-12" name="__codelineno-9-12" href="#__codelineno-9-12"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">german</span><span class="p">;</span><span class="w"></span>
+<a id="__codelineno-9-13" name="__codelineno-9-13" href="#__codelineno-9-13"></a><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<a id="__codelineno-9-14" name="__codelineno-9-14" href="#__codelineno-9-14"></a>
+<a id="__codelineno-9-15" name="__codelineno-9-15" href="#__codelineno-9-15"></a><span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getEnglish</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"></span>
+<a id="__codelineno-9-16" name="__codelineno-9-16" href="#__codelineno-9-16"></a><span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">english</span><span class="p">;</span><span class="w"></span>
+<a id="__codelineno-9-17" name="__codelineno-9-17" href="#__codelineno-9-17"></a><span class="w">    </span><span class="p">}</span><span class="w"></span>
+<a id="__codelineno-9-18" name="__codelineno-9-18" href="#__codelineno-9-18"></a>
+<a id="__codelineno-9-19" name="__codelineno-9-19" href="#__codelineno-9-19"></a><span class="p">}</span><span class="w"></span>
 </code></pre></div>
 <h3 id="tabellen">Tabellen<a class="headerlink" href="#tabellen" title="Permanent link">&para;</a></h3>
 <p>Die Syntax für Tabellen ist etwas umständlich. Daher ist es leichter diese mit einem Tool wie dem <a href="https://tableconvert.com/markdown-generator">Markdown Table Editor and Generator</a> zu erstellen und den Code in die Dateien einzufügen.</p>
-<div class="highlight"><pre><span></span><code><a id="__codelineno-8-1" name="__codelineno-8-1" href="#__codelineno-8-1"></a>| Eins | Links | Mittig | Rechts |
-<a id="__codelineno-8-2" name="__codelineno-8-2" href="#__codelineno-8-2"></a>|------|:------|:------:|-------:|
-<a id="__codelineno-8-3" name="__codelineno-8-3" href="#__codelineno-8-3"></a>| 0    | 1     | 2      | 3      |
+<div class="highlight"><span class="filename">Beispiel</span><pre><span></span><code><a id="__codelineno-10-1" name="__codelineno-10-1" href="#__codelineno-10-1"></a>| Eins | Links | Mittig | Rechts |
+<a id="__codelineno-10-2" name="__codelineno-10-2" href="#__codelineno-10-2"></a>|------|:------|:------:|-------:|
+<a id="__codelineno-10-3" name="__codelineno-10-3" href="#__codelineno-10-3"></a>| 0    | 1     | 2      | 3      |
 </code></pre></div>
 <table>
 <thead>
